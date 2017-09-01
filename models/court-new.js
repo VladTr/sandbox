@@ -13,8 +13,8 @@ connection.on('error', function (err) {
 
 var courtSchema = new mongoose.Schema({
     name: nameset,
-    area: {type:mongoose.Schema.Types.ObjectId, ref:'area'},
-    region:{type:mongoose.Schema.Types.ObjectId, ref:'region'},
+    area: {type:mongoose.Schema.Types.ObjectId, ref:'Area'},
+    region:{type:mongoose.Schema.Types.ObjectId, ref:'Region'},
     spec: {type:Number},
     address: {type:String},
     phone:{type:String},
