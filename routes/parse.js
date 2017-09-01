@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Court = require('../models/court');
-var areaCurrent = require('../data/8');
+var areaCurrent = require('../data/5');
 var func = require('../functions');
 
 router.get('/', function (req, res) {
@@ -9,7 +9,7 @@ router.get('/', function (req, res) {
 });
 
 // 5-районы в области      6-міськрайонні     7-міські    8 - районы в городе
-var court_type = 8;
+var court_type = 5;
 
 for (var key in areaCurrent){
 
@@ -27,7 +27,8 @@ for (var key in areaCurrent){
        'Content-Type' : 'application/x-www-form-urlencoded'
      };
 
-    func.postAndSave(formData,headers,code,region,court_type);
+    //func.postAndSave(formData,headers,code,region,court_type);
+    func.postAndSave2(formData,headers,code,region,court_type);
 }
 
 

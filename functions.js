@@ -1,11 +1,11 @@
 const cheerio = require('cheerio');
 const request = require('postman-request');
 var iconv = require('iconv-lite');
-var Court = require('./models/court');
+var Court = require('./models/court-new');
 var Single = require('./models/singletest');
 var Area = require('./models/area-new');
 var Region = require('./models/region-new');
-
+var ObjectId = mongoose.Schema.ObjectId;
 
 
 var findInParsedSie = function (body) {
@@ -31,6 +31,55 @@ var findInParsedSie = function (body) {
         phone: phone
     };
     return courtInfo;
+};
+
+var postAndSave2 = function (formData, headers, key, reg, court_type) {
+    getRegionId('Одеська');
+    getAreaId('Великомихайлівський');
+    request.post({
+        url:'http://court.gov.ua/sudova-vlada/sudy',
+        form:formData,
+        headers: headers
+    }, function (err, httpResponse, body) {
+        if (err) {
+            console.log(err);
+        }
+        if (httpResponse){
+            request(
+                {
+                    url:httpResponse.headers.location,
+                    encoding:null
+                },
+                function(err,res,body){
+
+                    var record = findInParsedSie((iconv.decode(body, 'win1251')).toString());
+
+                    var court = new Court({
+                        name:{
+                            last:{
+                                ua:record.name
+                            }
+                        },
+
+                        area:getAreaId('Великомихайлівський')
+                        // region: reg.split('/')[1],
+                        // type:court_type,
+                        // address: record.address,
+                        // phone: record.phone,
+                        // email: record.email
+                    });
+
+                    court.save(function (err) {
+                        if (err){
+
+                            return console.log(err+'--error---'+key+'  :  '+region);
+                        }
+                        //console.log(record);
+                    });
+                }
+            );
+        }
+    });
 };
 
 var postAndSave = function (formData, headers, key, reg, court_type) {
@@ -73,11 +122,7 @@ var postAndSave = function (formData, headers, key, reg, court_type) {
             );
         }
     });
-
-
-
 };
-
 
 var singleAdd = function (name, list) {
     var sin = new Single({
@@ -88,7 +133,6 @@ var singleAdd = function (name, list) {
         if (err) console.log(err);
     })
 };
-
 
 var realAdd = function (name, list, currentRegion) {
     var cities = [];
@@ -131,7 +175,28 @@ function remove(str, start, end) {
     return before+after;
 }
 
+function getRegionId(regionName) {
+ Region.findOne({'name.last.ua':regionName}, function (err, region) {
+     if (err) console.log(err);
+     if (region) {
+         console.log('region id: '+region._id);
+         return region._id;
+     }
+ });
+}
+
+function getAreaId(areaName) {
+ Area.findOne({'name.last.ua':areaName}, function (err, area) {
+     if (err) console.log(err);
+     if (area) {
+         console.log('area id: '+area._id);
+         return area._id
+     }
+ });
+}
+
 module.exports.findInParsedSie = findInParsedSie;
 module.exports.postAndSave = postAndSave;
 module.exports.singleAdd = singleAdd;
 module.exports.realAdd = realAdd;
+module.exports.postAndSave2 = postAndSave2;
