@@ -11,15 +11,6 @@ connection.on('error', function (err) {
 });
 
 
-
-var languageSet = new mongoose.Schema({
-    ua:{type:String}, // required:true
-    ru:{type:String},
-    en:{type:String}
-});
-
-
-
 var courtSchema = new mongoose.Schema({
     name: nameset,
     area: {type:mongoose.Schema.Types.ObjectId, ref:'area'},
@@ -30,7 +21,6 @@ var courtSchema = new mongoose.Schema({
     email:{type:String},
     site:{type:String}
 });
-
 
 
 var Court = connection.model('Court', courtSchema);

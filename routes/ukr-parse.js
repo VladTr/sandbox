@@ -63,7 +63,6 @@ router.get('/', function (req, res) {
                     flag = true;
                 }
                 if (flag && result.split(" ")[2] !=='' && result.split(" ")[2] != null){
-
                     if (result.split(" ")[4] != undefined){
                         console.log('i found it => '+result);
                         areaInfo.list.push(result.split(" ")[2]+' '+result.split(" ")[3]+' '+result.split(" ")[4]);
