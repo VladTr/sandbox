@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test #2</title>
+    <style>
+        .bl{
+            color:blue;
+        }
+    </style>
+</head>
+<body>
+    <div id="menu">
+        <ul>
+            <li><a href="/parse ">парсинг судов</a></li>
+            <li><a href="/ukr-parse ">парсинг районов !!!</a></li>
+            <li><a href="/modeltest/find ">ищем район</a></li>
+            <li><a href="/openmap">open map</a></li>
+            <li><a href="/openmap/json">open map (json)</a></li>
+            <li><a href="/openmap/test">open map (структурный ввод)</a></li>
+            <li><a href="/openmap/query">open map (НЕ структурный ввод)</a></li>
+            <li><a href="/modeltest ">тестим модель</a></li>
+            <li><a  class="bl" href="/add-regions ">добавляем регионы</a></li>
+        </ul>
+
+    </div>
+    <div id="enter">
+        <label for="area">район: </label>
+        <input type="text" id="area">
+
+        <label for="region">область: </label>
+        <input type="text" id="region">
+
+        <button id="btn">найти суд</button>
+
+        <hr>
+        <label for="address">область: </label>
+        <input type="text" id="address" size="60px">
+
+        <button id="btn2">найти полный адресс /openStreetMap</button>
+    </div>
+    <div id="result"></div>
+    <script>
+        var btn = document.getElementById('btn');
+        var btn2 = document.getElementById('btn2');
+        var area = document.getElementById('area');
+        var region = document.getElementById('region');
+        var result = document.getElementById('result');
+        var address = document.getElementById('address');
+        result.style.color = 'blue';
+        btn.addEventListener('click', function () {
+            if (area.value !== '' &&  region.value !== ''){
+                var x = new XMLHttpRequest();
+                var url = "/findcourt?area="+String(area.value)+"&region="+String(region.value);
+                x.open("GET", url, true);
+                x.onload = function (){
+                    result.innerHTML = x.responseText;
+                };
+                x.send(null);
+                console.log(inpt.value);
+            } else {
+                result.innerHTML = 'enter the address, please';
+            }
+        });
+        btn2.addEventListener('click', function () {
+           if (address.value !=='') {
+               var x = new XMLHttpRequest();
+               var url = "/openmap/query?address="+String(address.value);
+               x.open("GET", url, true);
+               x.onload = function (){
+                   result.innerHTML = x.responseText;
+                   console.log(x.responseText);
+               };
+               x.send(null);
+           } else {
+               result.innerHTML = 'enter the address, please';
+           }
+        });
+    </script>
+
+    <hr>
+    Казацкое, Белгород-Днестровский район, Одесская область, 67733
+    <hr>
+    Одесса ул. Жуковского 23, 65045
+    <hr>
+
+</body>
+
+</html>
