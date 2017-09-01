@@ -7,7 +7,15 @@ var iconvlite = require('iconv-lite');
 var func = require('../functions');
 var currentRegion = require('../data/regions-all');
 
+//временно
+var Area = require('../models/area-new');
+
 router.get('/', function (req, res) {
+
+    /*Drop collection*/
+    Area.remove({}, function(err) {
+        console.log('collection removed')
+    });
 
     /*Great circle*/
     for (var index=0; index<currentRegion.length; index++){
@@ -25,7 +33,6 @@ router.get('/', function (req, res) {
             var flag = false; //маркер первого вхождения
             var obj =csvjson.toArray(data, options);
             //вспомогательный цикл
-            console.log(obj.length);
             for (var j=0; j<obj.length; j++){
                 var resultToRemove = obj[j].toString();
                 if (resultToRemove.indexOf('рада')!==-1){
@@ -56,16 +63,16 @@ router.get('/', function (req, res) {
                     flag = true;
                 }
                 if (flag && result.split(" ")[2] !=='' && result.split(" ")[2] != null){
-                    if (result.split(" ")[3] != undefined){
+
+                    if (result.split(" ")[4] != undefined){
+                        console.log('i found it => '+result);
+                        areaInfo.list.push(result.split(" ")[2]+' '+result.split(" ")[3]+' '+result.split(" ")[4]);
+                    } else if (result.split(" ")[3] != undefined){
                         areaInfo.list.push(result.split(" ")[2]+' '+result.split(" ")[3]);
                     } else {
                         areaInfo.list.push(result.split(" ")[2]);
                     }
-                    if (result.split(" ")[4] != undefined){
-                        console.log('i found it =>  '+result);
-                    }
                 }
-
             }
         }
     }
