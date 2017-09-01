@@ -90,33 +90,23 @@ var singleAdd = function (name, list) {
 };
 
 
-var realAdd = function (name, list) {
+var realAdd = function (name, list, currentRegion) {
     var cities = [];
     for (var i=0; i<list.length; i++){
-        var el = {
+        var city = {
             name:{
                 last:{
                     ua:list[i]
                 }
             }
         };
-        cities.push(el);
+        cities.push(city);
     }
       // находим область и вставляем
-    var xxx = '';
-    var city = {
-        name:{
-            last:{
-                ua:'Blah-blah-blah'
-            }
-        }
-    };
-    Region.findOne({'name.last.ua': 'Вінницька'}, function (err, region) {
+    Region.findOne({'name.last.ua': currentRegion}, function (err, region) {
         if (err) {
             console.log(err)
         } else {
-            xxx = region;
-            //console.log(xxx._id);
             var area = new Area ({
                 test:'old',
                 name:{
@@ -130,42 +120,9 @@ var realAdd = function (name, list) {
             area.save(function (err) {
                 if (err) console.log(err)
             });
-            //console.log(area._id);
-            // Area.findByIdAndUpdate(area._id,
-            //     {$push:{cities:city}},
-            //     {safe: true, upsert: true, new : true},
-            //     function (err, arr) {
-            //         if (err) console.log(err);
-            // });
-
-            // area.update({cities:{name:{last:{ua:'Blah-blah-blah'}}}}, function (err, raw) {
-            //     if (err) console.log(err);
-            //     if (raw) console.log(raw);
-            // });
-            //console.log('Area id:  '+area._id);
-            //addListOfCities(area._id);
         }
     });
-
-
-     // все остальное
 };
-
-
-function addListOfCities(id) {
-    var arr = ['11', '22','33'];
-    var city = {
-      name:{
-          last:{
-              ua:'Blah-blah-blah'
-          }
-      }
-    };
-    Area.findByIdAndUpdate(id, {$push: {cities:city}}, {new:true}, function (err, areaId) {
-       if (err) console.log(err);
-       console.log(areaId);
-    });
-}
 
 
 function remove(str, start, end) {
