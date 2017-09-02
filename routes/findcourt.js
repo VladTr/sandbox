@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 var url = require('url');
-var Court = require('../models/court');
+var Court = require('../models/court-old');
 
 router.get('/', function (req, res) {
 

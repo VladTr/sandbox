@@ -1,4 +1,5 @@
 const cheerio = require('cheerio');
+const mongoose = require('mongoose');
 const request = require('postman-request');
 var iconv = require('iconv-lite');
 var Court = require('./models/court-new');
@@ -33,9 +34,8 @@ var findInParsedSie = function (body) {
     return courtInfo;
 };
 
-var postAndSave2 = function (formData, headers, key, reg, court_type) {
-    getRegionId('Одеська');
-    getAreaId('Великомихайлівський');
+var postAndSave2 = function (formData, headers, regionCurrent, areaCurrent, court_type) {
+    console.log(regionCurrent+'/'+areaCurrent);
     request.post({
         url:'http://court.gov.ua/sudova-vlada/sudy',
         form:formData,
@@ -60,8 +60,13 @@ var postAndSave2 = function (formData, headers, key, reg, court_type) {
                                 ua:record.name
                             }
                         },
-
-                        area:getAreaId('Великомихайлівський')
+                        spec:court_type,
+                        address: record.address,
+                        phone: record.phone,
+                        email: record.email
+//----------------------------
+                        //test:getAreaId('Великомихайлівський')
+                        //area:mongoose.Types.ObjectId('59aa7a9913569106a828340f')
                         // region: reg.split('/')[1],
                         // type:court_type,
                         // address: record.address,
@@ -69,13 +74,43 @@ var postAndSave2 = function (formData, headers, key, reg, court_type) {
                         // email: record.email
                     });
 
-                    court.save(function (err) {
-                        if (err){
 
-                            return console.log(err+'--error---'+key+'  :  '+region);
-                        }
-                        //console.log(record);
+                    var promise = new Promise(function (resolve, reject) {
+                        Area.findOne({'name.last.ua':areaCurrent}, function (err, area) {
+                            if (err) console.log(err);
+                            if (area) {
+                                console.log('area id: '+area._id);
+                                console.log('type of: '+ typeof area);
+                                court.area=area._id;
+                                court.save();
+                                resolve();
+                            }
+                        });
+                    }).then(function () {
+                        //console.log('ress  '+ress);
+                        Region.findOne({'name.last.ua':regionCurrent}, function (err, region) {
+                            if (err) console.log(err);
+                            if (region) {
+                                court.region=region._id;
+                                court.save();
+                            }
+                        });
                     });
+
+
+                    // var areaId = getAreaId('Ананьївський');
+                    // console.log('result: '+areaId);
+                    // court.area = mongoose.Types.ObjectId('59aa7a9913569106a828340f');
+                    // court.test = {a:1};
+                    // //court.test = getAreaId('Великомихайлівський');
+                    // console.log('court test '+court.test);
+                    // court.save(function (err) {
+                    //     if (err){
+                    //
+                    //         return console.log(err+'--error---'+key+'  :  '+region);
+                    //     }
+                    //     //console.log(record);
+                    // });
                 }
             );
         }
@@ -180,19 +215,29 @@ function getRegionId(regionName) {
      if (err) console.log(err);
      if (region) {
          console.log('region id: '+region._id);
+         console.log('type of: '+ typeof region._id);
          return region._id;
      }
  });
 }
 
 function getAreaId(areaName) {
- Area.findOne({'name.last.ua':areaName}, function (err, area) {
-     if (err) console.log(err);
-     if (area) {
-         console.log('area id: '+area._id);
-         return area._id
-     }
- });
+    var resultT = '-----';
+    var promise = new Promise(function (resolve, reject) {
+
+        Area.findOne({'name.last.ua':areaName}, function (err, area) {
+            console.log('resultT '+resultT);
+            if (err) console.log(err);
+            if (area) {
+                console.log('area id: '+area._id);
+                console.log('type of: '+ typeof area);
+            }
+            resultT = '++++++++';
+        });
+        resolve(resultT);
+    }).then(function (resultT) {
+        return String(resultT);
+    });
 }
 
 module.exports.findInParsedSie = findInParsedSie;
@@ -200,3 +245,21 @@ module.exports.postAndSave = postAndSave;
 module.exports.singleAdd = singleAdd;
 module.exports.realAdd = realAdd;
 module.exports.postAndSave2 = postAndSave2;
+
+
+// var promise = new Promise(function (resolve, reject) {
+//     var ress = '';
+//     Area.findOne({'name.last.ua':areaName}, function (err, area) {
+//         console.log('resultT '+resultT);
+//         if (err) console.log(err);
+//         if (area) {
+//             console.log('area id: '+area._id);
+//             console.log('type of: '+ typeof area);
+//             ress = area._id;
+//         }
+//     });
+//     resolve(ress);
+// }).then(function (ress) {
+//     court.test={a:89};
+//     court.save();
+// });
