@@ -187,7 +187,6 @@ var realAdd = function (name, list, currentRegion) {
             console.log(err)
         } else {
             var area = new Area ({
-                test:'old',
                 name:{
                     last:{
                         ua:name
@@ -203,6 +202,96 @@ var realAdd = function (name, list, currentRegion) {
     });
 };
 
+var findRegionAndAddCity = function(region, city){
+    Region.findOne({'name.last.ua':region}, function (err, region) {
+        if (err) console.log(err);
+        if (region) {
+            area = new Area({
+               name: {
+                   last:{
+                       ua:city
+                   }
+               },
+               region:region._id
+            });
+            area.save(function (err) {
+                if (err) console.log(err);
+            })
+        }
+    });
+};
+
+
+var addSubareaWithStreets = function (region, area,subarea) {
+    var areaInfo = {};
+    //console.dir(subarea);
+    var promise = new Promise(function (resolve, reject) {
+        Region.findOne({'name.last.ua':region}, function (err, reg) {
+            if (err) console.log(err);
+            if (reg){
+                var areaNew = new Area(
+                    {
+                        name:{
+                            last:{
+                                ua:area
+                            }
+                        },
+                        region:reg.id
+                    }
+                );
+
+                areaNew.save(function (err) {
+                    if (err) console.log(err);
+                });
+                resolve();
+            }
+        })
+    }).then(function () {
+        return new Promise (function (resolve, reject) {
+           Area.findOne({'name.last.ua':area}, function (err, ar) {
+               if (err) console.log(err);
+               if (ar) {
+                    subarea.forEach(function (el) {
+                       //console.log(el.name);
+                       ar.subarea.push({
+                          name:{
+                              last:{
+                                  ua:el.name
+                              }
+                          }
+                       });
+
+                    });
+
+                    ar.subarea.forEach(function (el) {
+                       subarea.forEach(function (inner) {
+                          if (inner.name == el.name.last.ua){
+                             inner.streets.forEach(function (item) {
+                                 el.streets.push({
+                                    name:{
+                                        last:{
+                                            ua:item.name.last.ua
+                                        }
+                                    },
+                                    regexp:item.regexp
+                                 });
+                                 console.log(el.streets);
+                             });
+                          }
+                       });
+                    });
+
+               ar.save(function(err){if(err)console.log(err)});
+               }
+           });
+        });
+    }).then(function () {
+       console.log('done');
+    });
+
+
+};
+
 
 function remove(str, start, end) {
     var before = str.substring(0, start);
@@ -210,42 +299,14 @@ function remove(str, start, end) {
     return before+after;
 }
 
-function getRegionId(regionName) {
- Region.findOne({'name.last.ua':regionName}, function (err, region) {
-     if (err) console.log(err);
-     if (region) {
-         console.log('region id: '+region._id);
-         console.log('type of: '+ typeof region._id);
-         return region._id;
-     }
- });
-}
-
-function getAreaId(areaName) {
-    var resultT = '-----';
-    var promise = new Promise(function (resolve, reject) {
-
-        Area.findOne({'name.last.ua':areaName}, function (err, area) {
-            console.log('resultT '+resultT);
-            if (err) console.log(err);
-            if (area) {
-                console.log('area id: '+area._id);
-                console.log('type of: '+ typeof area);
-            }
-            resultT = '++++++++';
-        });
-        resolve(resultT);
-    }).then(function (resultT) {
-        return String(resultT);
-    });
-}
 
 module.exports.findInParsedSie = findInParsedSie;
 module.exports.postAndSave = postAndSave;
 module.exports.singleAdd = singleAdd;
 module.exports.realAdd = realAdd;
 module.exports.postAndSave2 = postAndSave2;
-
+module.exports.findRegionAndAddCity = findRegionAndAddCity;
+module.exports.addSubareaWithStreets =addSubareaWithStreets;
 
 // var promise = new Promise(function (resolve, reject) {
 //     var ress = '';

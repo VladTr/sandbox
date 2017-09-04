@@ -17,11 +17,11 @@ connection.on('error', function (err) {
 
 //районы
 var areaSchema = new mongoose.Schema({
-    test:{type:String},
     name:nameSet,
     region:{type:mongoose.Schema.Types.ObjectId, ref:'Region'},
     //region:{type:String},
-    subarea: {
+    subarea:[
+        {
             name:nameSet,
             streets:[
                 {
@@ -29,7 +29,8 @@ var areaSchema = new mongoose.Schema({
                     regexp:String
                 }
             ]
-    },
+        }
+    ],
     cities:[
         {
             name:nameSet
