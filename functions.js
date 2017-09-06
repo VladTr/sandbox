@@ -64,53 +64,61 @@ var postAndSave2 = function (formData, headers, regionCurrent, areaCurrent, cour
                         address: record.address,
                         phone: record.phone,
                         email: record.email
-//----------------------------
-                        //test:getAreaId('Великомихайлівський')
-                        //area:mongoose.Types.ObjectId('59aa7a9913569106a828340f')
-                        // region: reg.split('/')[1],
-                        // type:court_type,
-                        // address: record.address,
-                        // phone: record.phone,
-                        // email: record.email
                     });
 
-
-                    var promise = new Promise(function (resolve, reject) {
-                        Area.findOne({'name.last.ua':areaCurrent}, function (err, area) {
-                            if (err) console.log(err);
-                            if (area) {
-                                console.log('area id: '+area._id);
-                                console.log('type of: '+ typeof area);
-                                court.area=area._id;
-                                court.save();
-                                resolve();
+                    if (court_type != 8) {
+                        var promise = new Promise(function (resolve, reject) {
+                            Area.findOne({'name.last.ua':areaCurrent}, function (err, area) {
+                                if (err) console.log(err);
+                                if (area) {
+                                    console.log('area id: '+area._id);
+                                    console.log('type of: '+ typeof area);
+                                    court.area=area._id;
+                                    court.save();
+                                    resolve();
+                                }
+                            });
+                        }).then(function () {
+                            //console.log('ress  '+ress);
+                            Region.findOne({'name.last.ua':regionCurrent}, function (err, region) {
+                                if (err) console.log(err);
+                                if (region) {
+                                    court.region=region._id;
+                                    court.save();
+                                }
+                            });
+                        });
+                    } else {
+                        //console.log('court_type = '+court_type);
+                        var promise2 = new Promise (function (resolve, reject) {
+                            Region.findOne({'name.last.ua':regionCurrent}, function (err, region){
+                                if (region) {
+                                    var id = region._id;
+                                    resolve(id);
+                                }
+                            });
+                        }).then(function (id) {
+                            console.log('areaCurrent: '+areaCurrent);
+                            Area.find({'subarea.name.last.ua':areaCurrent}).where('region').equals(id).exec(cb);
+                            function cb (err, area){
+                                if (err) console.log(err);
+                                //if (area) console.log(area[0].name.last.ua);
+                                //if (area) console.log(area[0].region);
+                                if (area) {
+                                    area[0].subarea.forEach(function (item) {
+                                        if (item.name.last.ua == areaCurrent){
+                                            console.log(item.name.last.ua);
+                                            console.log(item._id);
+                                        }
+                                    });
+                                }
                             }
                         });
-                    }).then(function () {
-                        //console.log('ress  '+ress);
-                        Region.findOne({'name.last.ua':regionCurrent}, function (err, region) {
-                            if (err) console.log(err);
-                            if (region) {
-                                court.region=region._id;
-                                court.save();
-                            }
-                        });
-                    });
+                    }
 
 
-                    // var areaId = getAreaId('Ананьївський');
-                    // console.log('result: '+areaId);
-                    // court.area = mongoose.Types.ObjectId('59aa7a9913569106a828340f');
-                    // court.test = {a:1};
-                    // //court.test = getAreaId('Великомихайлівський');
-                    // console.log('court test '+court.test);
-                    // court.save(function (err) {
-                    //     if (err){
-                    //
-                    //         return console.log(err+'--error---'+key+'  :  '+region);
-                    //     }
-                    //     //console.log(record);
-                    // });
+
+
                 }
             );
         }
@@ -271,6 +279,9 @@ var addSubareaWithStreets = function (region, area,subarea) {
                                     name:{
                                         last:{
                                             ua:item.name.last.ua
+                                        },
+                                        old:{
+                                            ua:item.name.old.ua
                                         }
                                     },
                                     regexp:item.regexp
@@ -282,6 +293,7 @@ var addSubareaWithStreets = function (region, area,subarea) {
                     });
 
                ar.save(function(err){if(err)console.log(err)});
+               resolve();
                }
            });
         });

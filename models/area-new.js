@@ -11,9 +11,6 @@ connection.on('error', function (err) {
 });
 
 
-// var regionSchema = new mongoose.Schema({
-//     name:nameSet
-// });
 
 //районы
 var areaSchema = new mongoose.Schema({
@@ -38,6 +35,9 @@ var areaSchema = new mongoose.Schema({
     ]
 });
 
+areaSchema.statics.search = function (name, cb) {
+    return this.findOne({'name.last.ua':name}).exec(cb);
+};
 
 
 module.exports = connection.model('Area', areaSchema);

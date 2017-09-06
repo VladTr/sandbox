@@ -11,6 +11,8 @@ const addRegions = require('./routes/add-regions');
 const parseCities = require('./routes/parse-cities');
 const parseStreets = require('./routes/parse-streets');
 
+const findSubarea = require('./routes/api/findSubarea');
+
 app.set('views', path.join(__dirname, 'public'));
 //app.set('view engine', 'jade');
 
@@ -29,6 +31,7 @@ app.use('/add-regions', addRegions);
 app.use('/parse-cities', parseCities);
 app.use('/parse-streets', parseStreets);
 
+app.use('/api/find-subarea', findSubarea);
 
 app.listen(8080, function () {
     console.log('Example app listening on port 8080!')
