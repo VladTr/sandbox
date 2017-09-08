@@ -12,6 +12,8 @@ const parseCities = require('./routes/parse-cities');
 const parseStreets = require('./routes/parse-streets');
 
 const findSubarea = require('./routes/api/findSubarea');
+const findCourtBy = require('./routes/api/findCourtByAreaInCity');
+const findAreaBy = require('./routes/api/findAreaByCiteAndRegion');
 
 app.set('views', path.join(__dirname, 'public'));
 //app.set('view engine', 'jade');
@@ -32,6 +34,9 @@ app.use('/parse-cities', parseCities);
 app.use('/parse-streets', parseStreets);
 
 app.use('/api/find-subarea', findSubarea);
+app.use('/api/find-court-by/', findCourtBy);
+app.use('/api/area', findAreaBy);
+
 
 app.listen(8080, function () {
     console.log('Example app listening on port 8080!')

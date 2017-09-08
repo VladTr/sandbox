@@ -48,9 +48,11 @@ var postAndSave2 = function (formData, headers, regionCurrent, areaCurrent, cour
             request(
                 {
                     url:httpResponse.headers.location,
-                    encoding:null
+                    encoding:null,
+                    // timeout:9000
                 },
                 function(err,res,body){
+                    console.log(httpResponse.headers.location);
 
                     var record = findInParsedSie((iconv.decode(body, 'win1251')).toString());
 
@@ -71,8 +73,8 @@ var postAndSave2 = function (formData, headers, regionCurrent, areaCurrent, cour
                             Area.findOne({'name.last.ua':areaCurrent}, function (err, area) {
                                 if (err) console.log(err);
                                 if (area) {
-                                    console.log('area id: '+area._id);
-                                    console.log('type of: '+ typeof area);
+                                    //console.log('area id: '+area._id);
+                                    //console.log('type of: '+ typeof area);
                                     court.area=area._id;
                                     court.save();
                                     resolve();
@@ -94,21 +96,28 @@ var postAndSave2 = function (formData, headers, regionCurrent, areaCurrent, cour
                             Region.findOne({'name.last.ua':regionCurrent}, function (err, region){
                                 if (region) {
                                     var id = region._id;
+                                    court.region=region._id;
                                     resolve(id);
                                 }
                             });
                         }).then(function (id) {
-                            console.log('areaCurrent: '+areaCurrent);
+                            //console.log('areaCurrent: '+areaCurrent);
                             Area.find({'subarea.name.last.ua':areaCurrent}).where('region').equals(id).exec(cb);
                             function cb (err, area){
                                 if (err) console.log(err);
                                 //if (area) console.log(area[0].name.last.ua);
                                 //if (area) console.log(area[0].region);
+                                if(area[0] == undefined){
+                                    console.log(area);
+                                    console.log(areaCurrent);
+                                }
                                 if (area) {
                                     area[0].subarea.forEach(function (item) {
                                         if (item.name.last.ua == areaCurrent){
-                                            console.log(item.name.last.ua);
-                                            console.log(item._id);
+                                            //console.log(item.name.last.ua);
+                                            //console.log(item._id);
+                                            court.area = item._id;
+                                            court.save();
                                         }
                                     });
                                 }
@@ -178,6 +187,7 @@ var singleAdd = function (name, list) {
 };
 
 var realAdd = function (name, list, currentRegion) {
+    console.log(name);
     var cities = [];
     for (var i=0; i<list.length; i++){
         var city = {
@@ -224,7 +234,8 @@ var findRegionAndAddCity = function(region, city){
             });
             area.save(function (err) {
                 if (err) console.log(err);
-            })
+            });
+            console.log(area.name.last.ua);
         }
     });
 };

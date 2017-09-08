@@ -4,44 +4,57 @@
     <meta charset="UTF-8">
     <title>test #2</title>
     <style>
+        li{
+            list-style:none;
+        }
         .bl{
             color:blue;
         }
         #menu2{
             background-color: burlywood;
-            width: 300px;
+            width: 400px;
+        }
+        #add{
+            background-color: aliceblue;
+            font-size: 18px;
+            width: 450px;
         }
     </style>
 </head>
 <body>
     <div id="menu">
         <ul>
-            <li><a href="/parse-cities">добавляем города-районные центры</a></li>
+            <div id="add">
+                <li><a  class="bl" href="/add-regions ">добавляем регионы</a></li>
+                <li><a href="/parse-cities">добавляем города-районные центры</a></li>
+                <li><a href="/ukr-parse ">добавляем районы </a></li>
+                <li><a href="/parse-streets/donetsk"><strong>добавление улиц и районов [Донецк]</strong></a></li>
+                <li><a href="/parse-streets/kyiv"><strong>добавление улиц и районов [Киев]</strong></a></li>
+                <li><a href="/parse-streets/odessa"><strong>добавление улиц и районов [Одесса]</strong></a></li>
+                <li><a href="/parse-streets/lviv"><strong>добавление улиц и районов [Львов]</strong></a></li>
+                <li><a href="/parse-streets/mariupol"><strong>добавление улиц и районов [Мариуполь]</strong></a></li>
+                <li><a href="/parse-streets/zaporizhzhia"><strong>добавление улиц и районов [Запорожье]</strong></a></li>
+                <li><a href="/parse-streets/kropivnitsky"><strong>добавление улиц и районов [Кропивницкий]</strong></a></li>
+                <li><a href="/parse-streets/mycolaiv"><strong>добавление улиц и районов [Николаев]</strong></a></li>
+                <li><a href="/parse-streets/kharkiv"><strong>добавление улиц и районов [Харьков]</strong></a></li>
+                <li><a href="/parse-streets/all-other"><strong>добавление улиц и районов [Все остальные-без улиц]</strong></a></li>
+            </div>
+            <hr>
             <li><a href="/parse ">парсинг судов</a></li>
-            <li><a href="/ukr-parse ">парсинг районов !!!</a></li>
             <li><a href="/modeltest/find ">ищем район</a></li>
             <li><a href="/openmap">open map</a></li>
             <li><a href="/openmap/json">open map (json)</a></li>
             <li><a href="/openmap/test">open map (структурный ввод)</a></li>
             <li><a href="/openmap/query">open map (НЕ структурный ввод)</a></li>
             <li><a href="/modeltest ">тестим модель</a></li>
-            <li><a  class="bl" href="/add-regions ">добавляем регионы</a></li>
-            <li><a href="/parse-streets/donetsk"><strong>парсинг улиц и районов [Донецк]</strong></a></li>
-            <li><a href="/parse-streets/kyiv"><strong>парсинг улиц и районов [Киев]</strong></a></li>
-            <li><a href="/parse-streets/odessa"><strong>парсинг улиц и районов [Одесса]</strong></a></li>
-            <li><a href="/parse-streets/lviv"><strong>парсинг улиц и районов [Львов]</strong></a></li>
-            <li><a href="/parse-streets/mariupol"><strong>парсинг улиц и районов [Мариуполь]</strong></a></li>
-            <li><a href="/parse-streets/zaporizhzhia"><strong>парсинг улиц и районов [Запорожье]</strong></a></li>
-            <li><a href="/parse-streets/kropivnitsky"><strong>парсинг улиц и районов [Кропивницкий]</strong></a></li>
-            <li><a href="/parse-streets/mycolaiv"><strong>парсинг улиц и районов [Николаев]</strong></a></li>
-            <li><a href="/parse-streets/kharkiv"><strong>парсинг улиц и районов [Харьков]</strong></a></li>
-            <li><a href="/parse-streets/all-other"><strong>парсинг улиц и районов [Все остальные-без улиц]</strong></a></li>
         </ul>
     </div>
 
     <div id="menu2">
         <ul>
             <li><a href="/api/find-subarea">поиск subarea</a></li>
+            <li><a href="/api/find-court-by/subarea">поиск суда по району города</a></li>
+            <li><a href="/api/area">поиск района по селу и области</a></li>
         </ul>
     </div>
     <div id="enter">

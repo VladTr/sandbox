@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FIND COURT</title>
+</head>
+<body>
+    <div id="enter">
+        <label for="region">область: </label>
+        <input type="text" id="region">
+        <br>
+        <label for="subarea">район в городе: </label>
+        <input type="text" id="subarea">
+        <br>
+        <button id="btn">найти суд</button>
+    </div>
+    <div id="result"></div>
+    <script>
+        var btn = document.getElementById('btn');
+        var subarea = document.getElementById('subarea');
+        var region = document.getElementById('region');
+        var result = document.getElementById('result');
+        result.style.color = 'blue';
+        btn.addEventListener('click', function () {
+            if (subarea.value !== '' &&  region.value !== ''){
+                var x = new XMLHttpRequest();
+                var url = "/api/find-court-by/subarea?subarea="+String(subarea.value)+"&region="+String(region.value);
+                x.open("GET", url, true);
+                x.onload = function (){
+                    result.innerHTML = x.responseText;
+                    console.log(x.responseText);
+                };
+                x.send(null);
+            } else {
+                result.innerHTML = 'enter the address, please';
+            }
+        });
+    </script>
+</body>
+</html>

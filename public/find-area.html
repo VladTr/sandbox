@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FIND COURT</title>
+</head>
+<body>
+    <div id="enter">
+        <label for="region">область: </label>
+        <input type="text" id="region">
+        <br>
+        <label for="city">село/город: </label>
+        <input type="text" id="city">
+        <br>
+        <label for="street">улица: </label>
+        <input type="text" id="street">
+        <br>
+        <button id="btn">найти район</button>
+    </div>
+    <div id="result"></div>
+    <script>
+        var btn = document.getElementById('btn');
+        var city = document.getElementById('city');
+        var region = document.getElementById('region');
+        var street = document.getElementById('street');
+        var result = document.getElementById('result');
+        result.style.color = 'blue';
+        btn.addEventListener('click', function () {
+            if (city.value !== '' &&  region.value !== '' && street.value !== ''){
+                var x = new XMLHttpRequest();
+                var url = "/api/area?city="+String(city.value)+"&region="+String(region.value)+"&street="+String(street.value);
+                x.open("GET", url, true);
+                x.onload = function (){
+                    result.innerHTML = x.responseText;
+                    console.log(x.responseText);
+                };
+                x.send(null);
+            } else {
+                result.innerHTML = 'enter the address, please';
+            }
+        });
+    </script>
+</body>
+</html>
