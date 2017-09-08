@@ -39,6 +39,10 @@ areaSchema.statics.search = function (name, cb) {
     return this.findOne({'name.last.ua':name}).exec(cb);
 };
 
+areaSchema.methods.findSubArea = function findSubArea (street, callback) {
+    return this.model('Area').find({'subarea.streets.name.last.ua':street}, callback);
+};
+
 
 module.exports = connection.model('Area', areaSchema);
 //module.exports = mongoose.model('Users', UsersSchema);

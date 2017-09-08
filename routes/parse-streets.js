@@ -140,7 +140,7 @@ router.get('/odessa', function (req, res) {
                         subarea = $('table.standard.sortable').eq(k).find('tr').children().eq(i+3).text();
                         console.log('new: '+street+' old: '+oldStreet+'  /  '+subarea);
                         subAreasName.forEach(function (el) {
-                            if (el.name === subarea.trim()) {
+                            if (el.name === subarea.trim() || subarea.indexOf(el.name)!==-1) {
                                 el.streets.push({
                                     name: {
                                         last: {
@@ -158,40 +158,7 @@ router.get('/odessa', function (req, res) {
                 }
             }
 
-
-            //console.log(': '+table);
-            //res.send('table');
-
-/*
-                for (var i=7; i<len-7; i++){
-                    if (i%7 ==0){
-                        street = ($('table.standard.sortable>tbody>tr').children().eq(i).text()).split('[')[0].trim();
-
-                        oldStreet = ($('table.standard.sortable>tbody>tr').children().eq(i+2).text()).split('[')[0].trim();
-
-                        subarea = $('table.standard.sortable>tbody>tr').children().eq(i+3).text();
-                        if (street == 'Назва') break;
-                        //console.log(street+' / '+subarea+'  old: '+oldStreet);
-                        subAreasName.forEach(function (el) {
-                            if (el.name === subarea.trim()){
-                                el.streets.push({
-                                    name:{
-                                        last:{
-                                            ua:street
-                                        },
-                                        old:{
-                                            ua:oldStreet
-                                        }
-                                    },
-                                    regexp:'.*'
-                                });
-                            }
-                        });
-                    }
-
-                }
-    */
-            }
+        }
     });
 
     setTimeout(function(){ func.addSubareaWithStreets('Одеська', 'Одеса', subAreasName); }, 4000);

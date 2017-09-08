@@ -24,15 +24,21 @@ router.get('/', function (req, res) {
                   if (err) console.log(err);
                   if (ar.length != 0) {
                       if (ar[0].subarea.length !=0) {  // большой город
-                          var output = '';
+                          var output='';
                           ar[0].subarea.forEach(function (elem) {
-                              output+=elem.name.last.ua+'\n';
+                              console.log('сейчас ищем в =>  '+elem.name.last.ua);
+                              elem.streets.forEach(function (inner) {
+                                  if (inner.name.last.ua == street){
+                                      //console.log(elem.name.last.ua);
+                                      output+=(elem.name.last.ua)+'\n';
+                                  }
+                              });
                           });
-                          res.send(output);
-                          console.log(output);
+
                       } else { //маленький город
-                          res.send(arr[0].name.last.ua);
+                          res.send(ar[0].name.last.ua);
                       }
+                      res.send(output);
                   } else {
                       Area.find({'region':reg._id}).where('cities.name.last.ua').equals(city).exec(function (err, ar) {
                           if (err) console.log(err);
@@ -72,7 +78,21 @@ router.get('/', function (req, res) {
 
 });
 
+router.get('/temp', function (req, res) {
+    res.end();
+    Area.findOne({'name.last.ua':'Одеса'}, function (err, area) {
+        console.log(area);
+        area.subarea.forEach(function (item) {
+            if (item.name.last.ua == 'Малиновський'){
+                item.streets.forEach(function (inner) {
+                    console.log(inner.name.last.ua);
+                });
+            }
 
+
+        });
+    }) ;
+});
 
 
 module.exports = router;
