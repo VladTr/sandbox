@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Court = require('../models/court-old');
-var areaCurrent = require('../data/8');
+var areaCurrent = require('../data/5');
 var func = require('../functions');
-var court_type = 8;
+var court_type = 5;
 router.get('/', function (req, res) {
     res.send('parse');
 

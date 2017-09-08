@@ -26,10 +26,11 @@ router.get('/', function (req, res) {
                       if (ar[0].subarea.length !=0) {  // большой город
                           var output='';
                           ar[0].subarea.forEach(function (elem) {
-                              console.log('сейчас ищем в =>  '+elem.name.last.ua);
+                              //console.log('сейчас ищем в =>  '+elem.name.last.ua);
                               elem.streets.forEach(function (inner) {
                                   if (inner.name.last.ua == street){
-                                      //console.log(elem.name.last.ua);
+                                      console.log(typeof elem._id);
+                                      findCourtById(elem._id);
                                       output+=(elem.name.last.ua)+'\n';
                                   }
                               });
@@ -37,6 +38,7 @@ router.get('/', function (req, res) {
 
                       } else { //маленький город
                           res.send(ar[0].name.last.ua);
+
                       }
                       res.send(output);
                   } else {
@@ -46,6 +48,8 @@ router.get('/', function (req, res) {
                               var result = '';
                               ar.forEach(function (elem) {
                                   result+=elem.name.last.ua+' ';
+                                  console.log(elem._id);
+                                  findCourtById(elem._id);
                               });
                               res.send(result);
                           }
@@ -54,21 +58,6 @@ router.get('/', function (req, res) {
               });
 
             }
-            //     Area.find({'region':reg._id}).where('cities.name.last.ua').equals(city).exec(function (err, ar) {
-            //         if (err) console.log(err);
-            //         if (ar) {
-            //             console.log(ar);
-            //             var result = '';
-            //             ar.forEach(function (elem) {
-            //                 result+=elem.name.last.ua+' ';
-            //             });
-            //             res.send(result);
-            //         } else {
-            //             res.send('получить район не удалось')
-            //         }
-            //
-            //     });
-            // }
         });
 
 
@@ -94,5 +83,18 @@ router.get('/temp', function (req, res) {
     }) ;
 });
 
+
+
+var findCourtById = function (id) {
+    var result= Court.findOne({'area':id}, function (err, court) {
+
+        if (err) console.log(err);
+        if (court) {
+            console.log(court.name.last.ua);
+            result = court.name.last.ua;
+        }
+    });
+    return result;
+};
 
 module.exports = router;

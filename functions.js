@@ -65,7 +65,8 @@ var postAndSave2 = function (formData, headers, regionCurrent, areaCurrent, cour
                         spec:court_type,
                         address: record.address,
                         phone: record.phone,
-                        email: record.email
+                        email: record.email,
+                        replace: new mongoose.Types.ObjectId('000000000000000000000000')
                     });
 
                     if (court_type != 8) {

@@ -8,23 +8,26 @@
     <div id="enter">
         <label for="region">область: </label>
         <input type="text" id="region">
+        <!--<label for="subarea">район в городе: </label>-->
+        <!--<input type="text" id="subarea">-->
         <br>
-        <label for="subarea">район в городе: </label>
-        <input type="text" id="subarea">
+        <label for="city">село/город: </label>
+        <input type="text" id="city">
         <br>
         <button id="btn">найти суд</button>
     </div>
     <div id="result"></div>
     <script>
         var btn = document.getElementById('btn');
-        var subarea = document.getElementById('subarea');
+//        var subarea = document.getElementById('subarea');
         var region = document.getElementById('region');
+        var city = document.getElementById('city');
         var result = document.getElementById('result');
         result.style.color = 'blue';
         btn.addEventListener('click', function () {
-            if (subarea.value !== '' &&  region.value !== ''){
+            if (city.value !== '' &&  region.value !== ''){
                 var x = new XMLHttpRequest();
-                var url = "/api/find-court-by/subarea?subarea="+String(subarea.value)+"&region="+String(region.value);
+                var url = "/api/find-court-by/subarea?city="+String(city.value)+"&region="+String(region.value);
                 x.open("GET", url, true);
                 x.onload = function (){
                     result.innerHTML = x.responseText;

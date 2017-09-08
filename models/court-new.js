@@ -15,6 +15,7 @@ var courtSchema = new mongoose.Schema({
     name: nameset,
     area: {type:mongoose.Schema.Types.ObjectId, ref:'Area'},
     region:{type:mongoose.Schema.Types.ObjectId, ref:'Region'},
+    replace:{type:mongoose.Schema.Types.ObjectId, ref:'Court'},
     spec: {type:Number},
     address: {type:String},
     phone:{type:String},
