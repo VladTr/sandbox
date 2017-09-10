@@ -26,7 +26,7 @@ router.get('/', function (req, res) {
                       if (ar[0].subarea.length !=0) {  // большой город
                           var output='';
                           ar[0].subarea.forEach(function (elem) {
-                              //console.log('сейчас ищем в =>  '+elem.name.last.ua);
+                              console.log('сейчас ищем в =>  '+elem.name.last.ua);
                               elem.streets.forEach(function (inner) {
                                   if (inner.name.last.ua == street){
                                       console.log(typeof elem._id);
@@ -35,13 +35,31 @@ router.get('/', function (req, res) {
                                   }
                               });
                           });
-
+                          res.send(output);
+                          if (2===2) { // не нашли по улице
+                              console.log('2=2');
+                              ar[0].subarea.forEach(function (sub) {
+                                 if (sub.name.last.ua == 'Деснянський'){
+                                     console.log(sub.name.last.ua);
+                                     sub.streets.push(
+                                         {
+                                             name:{
+                                                 last:{
+                                                     ua:'--0--'
+                                                 }
+                                             }
+                                         }
+                                     );
+                                 }
+                              });
+                              ar[0].save();
+                          }
                       } else { //маленький город
                           res.send(ar[0].name.last.ua);
+                          findCourtById(ar[0]._id);
 
                       }
-                      res.send(output);
-                  } else {
+                  } else { // село
                       Area.find({'region':reg._id}).where('cities.name.last.ua').equals(city).exec(function (err, ar) {
                           if (err) console.log(err);
                           if (ar.length !=0) {
@@ -90,11 +108,16 @@ var findCourtById = function (id) {
 
         if (err) console.log(err);
         if (court) {
+            console.log('call');
             console.log(court.name.last.ua);
             result = court.name.last.ua;
         }
     });
     return result;
+};
+
+var addStreet = function (id, street) {
+
 };
 
 module.exports = router;
