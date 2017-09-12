@@ -31,14 +31,43 @@
                 var url = "/api/area?city="+String(city.value)+"&region="+String(region.value)+"&street="+String(street.value);
                 x.open("GET", url, true);
                 x.onload = function (){
-                    result.innerHTML = x.responseText;
-                    console.log(x.responseText);
+                    //result.innerHTML = JSON.parse(x.responseText);
+                    console.log(JSON.parse(x.responseText));
+                    var areas = JSON.parse(x.responseText);
+                    if (areas.length > 1) {
+                        var select = document.createElement("select");
+                        for (var i=0; i<areas.length; i++){
+                           var option = document.createElement("option");
+                           option.setAttribute("value", areas[i]);
+                           option.innerHTML = areas[i];
+                           select.appendChild(option);
+                        }
+                        result.innerHTML='Несколько районов  ';
+                        result.appendChild(select);
+                        select.addEventListener("change", function (event) {
+                          refinementData(event.target.value);
+                        });
+                    }
+                    if (areas.court){
+                        result.innerHTML= 'район:  '+areas.area+"<br> суд: "+areas.court.name.last.ua;
+                        console.log(areas);
+                    }
                 };
                 x.send(null);
             } else {
                 result.innerHTML = 'enter the address, please';
             }
         });
+        function refinementData(area) {
+            var url = "/api/area?refinement="+String(area)+"&region="+String(region.value)+"&city="+String(city.value);
+            console.log(url);
+            var x = new XMLHttpRequest();
+            x.open("GET", url, true);
+            x.onload = function () {
+              console.log(x.responseText);
+            };
+            x.send(null);
+        }
     </script>
 </body>
 </html>

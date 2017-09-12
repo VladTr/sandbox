@@ -42,7 +42,7 @@
             <hr>
             <li><a href="/parse ">парсинг судов</a></li>
             <li><a href="/modeltest/find ">ищем район</a></li>
-            <li><a href="/openmap">open map</a></li>
+            <li><a href="/openmap">open map  - new</a></li>
             <li><a href="/openmap/json">open map (json)</a></li>
             <li><a href="/openmap/test">open map (структурный ввод)</a></li>
             <li><a href="/openmap/query">open map (НЕ структурный ввод)</a></li>
@@ -57,65 +57,142 @@
             <li><a href="/api/area">поиск района по селу и области</a></li>
         </ul>
     </div>
-    <div id="enter">
-        <label for="area">район: </label>
-        <input type="text" id="area">
 
+    <div>
+        <a href="/company-parse" style="background-color: darkblue; color: white; font-size: 20px">парсер компаний</a>
+    </div>
+    <hr>
+    <div id="enter">
         <label for="region">область: </label>
         <input type="text" id="region">
-
-        <button id="btn">найти суд</button>
-
-        <hr>
-        <label for="address">область: </label>
-        <input type="text" id="address" size="60px">
-
-        <button id="btn2">найти полный адресс /openStreetMap</button>
+        <br>
+        <label for="city">село/город: </label>
+        <input type="text" id="city">
+        <br>
+        <label for="street">улица: </label>
+        <input type="text" id="street">
+        <br>
+        <button id="btn">найти район</button>
     </div>
     <div id="result"></div>
+
+
+    <!--<div id="enter">-->
+        <!--<label for="area">район: </label>-->
+        <!--<input type="text" id="area">-->
+
+        <!--<label for="region">область: </label>-->
+        <!--<input type="text" id="region">-->
+
+        <!--<button id="btn">найти суд</button>-->
+
+        <!--<hr>-->
+        <!--<label for="address">область: </label>-->
+        <!--<input type="text" id="address" size="60px">-->
+
+        <!--<button id="btn2">найти полный адресс /openStreetMap</button>-->
+    <!--</div>-->
+    <!--<div id="result"></div>-->
     <script>
         var btn = document.getElementById('btn');
-        var btn2 = document.getElementById('btn2');
-        var area = document.getElementById('area');
+        var city = document.getElementById('city');
         var region = document.getElementById('region');
+        var street = document.getElementById('street');
         var result = document.getElementById('result');
-        var address = document.getElementById('address');
         result.style.color = 'blue';
         btn.addEventListener('click', function () {
-            if (area.value !== '' &&  region.value !== ''){
+            if (city.value !== '' &&  region.value !== '' && street.value !== ''){
                 var x = new XMLHttpRequest();
-                var url = "/findcourt?area="+String(area.value)+"&region="+String(region.value);
+                var url = "/api/area?city="+String(city.value)+"&region="+String(region.value)+"&street="+String(street.value);
                 x.open("GET", url, true);
                 x.onload = function (){
-                    result.innerHTML = x.responseText;
+                    //result.innerHTML = JSON.parse(x.responseText);
+                    console.log(JSON.parse(x.responseText));
+                    var areas = JSON.parse(x.responseText);
+                    if (areas.length > 1) {
+                        var select = document.createElement("select");
+                        var option = document.createElement("option");
+                        option.setAttribute("value", '');
+                        //option.setAttribute("disabled");
+                        select.appendChild(option);
+                        for (var i=0; i<areas.length; i++){
+                            option = document.createElement("option");
+                            option.setAttribute("value", areas[i]);
+                            option.innerHTML = areas[i];
+                            select.appendChild(option);
+                        }
+                        result.innerHTML='Несколько районов  ';
+                        result.appendChild(select);
+                        select.addEventListener("change", function (event) {
+                            refinementData(event.target.value);
+                        });
+                    }
+                    if (areas.court){
+                        result.innerHTML= 'район:  '+areas.area+"<br> суд: "+areas.court.name.last.ua;
+                        console.log(areas);
+                    }
                 };
                 x.send(null);
-                console.log(inpt.value);
             } else {
                 result.innerHTML = 'enter the address, please';
             }
         });
-        btn2.addEventListener('click', function () {
-           if (address.value !=='') {
-               var x = new XMLHttpRequest();
-               var url = "/openmap/query?address="+String(address.value);
-               x.open("GET", url, true);
-               x.onload = function (){
-                   result.innerHTML = x.responseText;
-                   console.log(x.responseText);
-               };
-               x.send(null);
-           } else {
-               result.innerHTML = 'enter the address, please';
-           }
-        });
+        function refinementData(area) {
+            var url = "/api/area?refinement="+String(area)+"&region="+String(region.value)+"&city="+String(city.value);
+            console.log(url);
+            var x = new XMLHttpRequest();
+            x.open("GET", url, true);
+            x.onload = function () {
+                var area = JSON.parse(x.responseText);
+                result.innerHTML = 'район:  '+area.area+"<br> суд: "+area.court.name.last.ua;
+            };
+            x.send(null);
+        }
     </script>
 
-    <hr>
-    Казацкое, Белгород-Днестровский район, Одесская область, 67733
-    <hr>
-    Одесса ул. Жуковского 23, 65045
-    <hr>
+    <!--<script>-->
+        <!--var btn = document.getElementById('btn');-->
+        <!--var btn2 = document.getElementById('btn2');-->
+        <!--var area = document.getElementById('area');-->
+        <!--var region = document.getElementById('region');-->
+        <!--var result = document.getElementById('result');-->
+        <!--var address = document.getElementById('address');-->
+        <!--result.style.color = 'blue';-->
+        <!--btn.addEventListener('click', function () {-->
+            <!--if (area.value !== '' &&  region.value !== ''){-->
+                <!--var x = new XMLHttpRequest();-->
+                <!--var url = "/findcourt?area="+String(area.value)+"&region="+String(region.value);-->
+                <!--x.open("GET", url, true);-->
+                <!--x.onload = function (){-->
+                    <!--result.innerHTML = x.responseText;-->
+                <!--};-->
+                <!--x.send(null);-->
+                <!--console.log(inpt.value);-->
+            <!--} else {-->
+                <!--result.innerHTML = 'enter the address, please';-->
+            <!--}-->
+        <!--});-->
+        <!--btn2.addEventListener('click', function () {-->
+           <!--if (address.value !=='') {-->
+               <!--var x = new XMLHttpRequest();-->
+               <!--var url = "/openmap/query?address="+String(address.value);-->
+               <!--x.open("GET", url, true);-->
+               <!--x.onload = function (){-->
+                   <!--result.innerHTML = x.responseText;-->
+                   <!--console.log(x.responseText);-->
+               <!--};-->
+               <!--x.send(null);-->
+           <!--} else {-->
+               <!--result.innerHTML = 'enter the address, please';-->
+           <!--}-->
+        <!--});-->
+    <!--</script>-->
+
+    <!--<hr>-->
+    <!--Казацкое, Белгород-Днестровский район, Одесская область, 67733-->
+    <!--<hr>-->
+    <!--Одесса ул. Жуковского 23, 65045-->
+    <!--<hr>-->
 
 </body>
 

@@ -18,7 +18,7 @@ router.get('/', function (req, res) {
 
     var address = encodeURI('Казацкое, Белгород-Днестровский район, Одесская область, 67733');
     var baseUrl = 'http://nominatim.openstreetmap.org/search/';
-    var queryFormat = '?format=xml&addressdetails=1&limit=2&polygon=0';
+    var queryFormat = '?format=xml&addressdetails=1&limit=2&polygon=0&email=myemail@myserver.com';
 
         request(baseUrl+address+queryFormat, function (error, response, body) {
         //console.log(baseUrl+address);
@@ -67,9 +67,16 @@ router.get('/test', function (req, res) {
    //var url = encodeURI('http://nominatim.openstreetmap.org/search/?city=Birmingham&country=Great Britain&street=Pilkington%20Avenue&format=xml');
    //var url = encodeURI('http://nominatim.openstreetmap.org/search/?city=Київ&country=Україна&street=1, Перемоги площа&format=xml');
    // var baseUrl = encodeURI('http://nominatim.openstreetmap.org/search/?city=Одесса&country=Україна&street=25 Чапаевской дивизии, 14&format=xml');
-    var baseUrl = encodeURI('http://nominatim.openstreetmap.org/search/?city=Бар&country=Україна&street=Соборна, 2&state=Вінницька область&format=xml');
+    var baseUrl = encodeURI('http://nominatim.openstreetmap.org/search/' +
+        '?city=Бар&country=Україна&street=Соборна, 2&state=Вінницька область&format=json&email=tvv.ossystem@gmail.com');
     request(baseUrl, function (err, response, body) {
-      console.log(body);
+      var result = JSON.parse(body)[0].display_name;
+      result.split(',').forEach(function (elem) {
+         if (elem.indexOf('район') !== -1) {
+             console.log(elem);
+         }
+      });
+      //console.log(JSON.parse(body)[0].display_name);
       res.send('end');
    });
 });

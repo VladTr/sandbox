@@ -293,7 +293,7 @@ router.get('/zaporizhzhia', function (req, res) {
     request.get(url, function (error, response, body) {
         if (error) console.log(error);
         if (body) {
-            res.send(body);
+            //res.send(body);
             var $ = cheerio.load(body);
             var street, subarea, oldStreet = '';
 
@@ -302,7 +302,7 @@ router.get('/zaporizhzhia', function (req, res) {
                 if (i%4==0){
                     street = $('table.wikitable.sortable').eq(0).find('tr').children().eq(i+1).text();
                     street = street.removeEntry('вулиця').removeEntry('сквер').removeEntry('провулок').removeEntry('площа').trim();
-                    subarea= $('table.wikitable.sortable').eq(0).find('tr').children().eq(i+2).text();
+                    subarea= $('table.wikitable.sortable').eq(0).find('tr').children().eq(i+2).text().removeEntry('район').trim();
                     oldStreet = $('table.wikitable.sortable').eq(0).find('tr').children().eq(i+3).text();
                     switch (subarea){
                         case 'Шевченковский':
@@ -337,7 +337,7 @@ router.get('/zaporizhzhia', function (req, res) {
                             break;
                     }
                     if (street.length!=0){
-                        //console.log(street + ' /  ' + subarea);
+                        console.log(street + ' /  ' + subarea);
                         subAreasName.forEach(function (el) {
                             if (el.name === subarea.trim() || subarea.indexOf(el.name)!==-1) {
                                 el.streets.push({
@@ -356,7 +356,7 @@ router.get('/zaporizhzhia', function (req, res) {
                     }
                 }
             }
-            setTimeout(function(){ func.addSubareaWithStreets('Запорізька', 'Запоріжжя', subAreasName); }, 7000);
+            setTimeout(function(){ func.addSubareaWithStreets('Запорізька', 'Запоріжжя', subAreasName); console.log(subAreasName); }, 7000);
         }
         res.end();
     });
@@ -586,19 +586,19 @@ router.get('/all-other', function (req, res) {
     var subAreasNameChernigov = [
         {name:'Деснянський', streets:[]},{name:'Новозаводський', streets:[]}];
 
-    // setTimeout(function(){ func.addSubareaWithStreets('Дніпропетровська', "Кам'янське", subAreasNameKamyanske); }, 2000);
-    // setTimeout(function(){ func.addSubareaWithStreets('Дніпропетровська', "Дніпро", subAreasNameDnipro); }, 2000);
-    // setTimeout(function(){ func.addSubareaWithStreets('Дніпропетровська', "Кривий Ріг", subAreasNameKryvyiRig); }, 2000);
-    // setTimeout(function(){ func.addSubareaWithStreets('Донецька', "Горлівка", subAreasNameGorlivka); }, 2000);
-    // setTimeout(function(){ func.addSubareaWithStreets('Донецька', "Макіївка", subAreasNameMakiivka); }, 2000);
-    // setTimeout(function(){ func.addSubareaWithStreets('Житомирська', "Житомир", subAreasNameZhitomir); }, 2000);
-    // setTimeout(function(){ func.addSubareaWithStreets('Луганська', "Луганськ", subAreasNameLugansk); }, 2000);
-    // setTimeout(function(){ func.addSubareaWithStreets('Полтавська', "Кременчук", subAreasNameKremenchuk); }, 2000);
-    // setTimeout(function(){ func.addSubareaWithStreets('Полтавська', "Полтава", subAreasNamePoltava); }, 2000);
-    // setTimeout(function(){ func.addSubareaWithStreets('Сумська', "Суми", subAreasNameSumy); }, 2000);
-    // // setTimeout(function(){ func.addSubareaWithStreets('Херсонська', "Херсон", subAreasNameKherson); }, 2000);
-    // setTimeout(function(){ func.addSubareaWithStreets('Черкаська', "Черкаси", subAreasNameCherkassy); }, 2000);
-    // setTimeout(function(){ func.addSubareaWithStreets('Чернівецька', "Чернівці", subAreasNameChernivtsy); }, 2000);
+    setTimeout(function(){ func.addSubareaWithStreets('Дніпропетровська', "Кам'янське", subAreasNameKamyanske); }, 2000);
+    setTimeout(function(){ func.addSubareaWithStreets('Дніпропетровська', "Дніпро", subAreasNameDnipro); }, 2000);
+    setTimeout(function(){ func.addSubareaWithStreets('Дніпропетровська', "Кривий Ріг", subAreasNameKryvyiRig); }, 2000);
+    setTimeout(function(){ func.addSubareaWithStreets('Донецька', "Горлівка", subAreasNameGorlivka); }, 2000);
+    setTimeout(function(){ func.addSubareaWithStreets('Донецька', "Макіївка", subAreasNameMakiivka); }, 2000);
+    setTimeout(function(){ func.addSubareaWithStreets('Житомирська', "Житомир", subAreasNameZhitomir); }, 2000);
+    setTimeout(function(){ func.addSubareaWithStreets('Луганська', "Луганськ", subAreasNameLugansk); }, 2000);
+    setTimeout(function(){ func.addSubareaWithStreets('Полтавська', "Кременчук", subAreasNameKremenchuk); }, 2000);
+    setTimeout(function(){ func.addSubareaWithStreets('Полтавська', "Полтава", subAreasNamePoltava); }, 2000);
+    setTimeout(function(){ func.addSubareaWithStreets('Сумська', "Суми", subAreasNameSumy); }, 2000);
+    // setTimeout(function(){ func.addSubareaWithStreets('Херсонська', "Херсон", subAreasNameKherson); }, 2000);
+    setTimeout(function(){ func.addSubareaWithStreets('Черкаська', "Черкаси", subAreasNameCherkassy); }, 2000);
+    setTimeout(function(){ func.addSubareaWithStreets('Чернівецька', "Чернівці", subAreasNameChernivtsy); }, 2000);
     setTimeout(function(){ func.addSubareaWithStreets('Чернігівська', "Чернігів", subAreasNameChernigov); }, 2000);
     res.end();
 });
