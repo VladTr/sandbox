@@ -3,35 +3,16 @@ const router = express.Router();
 const Area = require('../../models/area-new');
 const Region = require('../../models/region-new');
 const Court = require('../../models/court-new');
-const path = require('path');
 const url = require('url');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
-var resultArray=[];
-
 router.get('/', function (req, res) {
-
-    console.log('обратились к странице');
 
     var region = url.parse(req.url, true).query['region'];
     var city = url.parse(req.url, true).query['city'];
     var street = url.parse(req.url, true).query['street'];
     var refinement = url.parse(req.url, true).query['refinement'];
-
-    if (refinement && resultArray.length !==0){
-        resultArray.forEach(function (elem) {
-           console.log('!!!  '+elem.name.last.ua);
-           console.log(refinement);
-           if (elem.name.last.ua == refinement) {
-               findCourtById(elem._id).then(function (result) {
-                   res.send(JSON.stringify({area:'area!!!', court:result}));
-                   refinement='';
-               });
-           }
-        });
-    }
-
 
     if (region && city && refinement === undefined) {
         console.log(region+' : '+city+'  :  '+street);
@@ -71,35 +52,24 @@ router.get('/', function (req, res) {
                               res.send(JSON.stringify(resultAreas));  // отправляем список районов в городе
                           }
 
-                          //res.send(JSON.parse(output));
-                          // if (2===2) { // не нашли по улице
-                          //     console.log('2=2');
-                          //     ar[0].subarea.forEach(function (sub) {
-                          //        if (sub.name.last.ua == 'Деснянський'){
-                          //            console.log(sub.name.last.ua);
-                          //            sub.streets.push(
-                          //                {
-                          //                    name:{
-                          //                        last:{
-                          //                            ua:'--0--'
-                          //                        }
-                          //                    }
-                          //                }
-                          //            );
-                          //        }
-                          //     });
-                          //     ar[0].save();
-                          // }
+                          if (resultAreas.length === 0) {  //
+                              console.log('Ничего не найдено');
+                              res.status(503).send(JSON.stringify({area:'район не найден', court:{}}));
+                          }
+
                       } else { //маленький город
-                          //res.send(JSON.parse(ar[0].name.last.ua));
                           findCourtById(ar[0]._id).then(function (result) {
                               console.log('done'+result);
-                              res.send(JSON.stringify({area:ar[0].name.last.ua, court:result}));
+                              if (result) {
+                                  res.send(JSON.stringify({area:ar[0].name.last.ua, court:result}));
+                              } else {
+                                  res.sendStatus(503); //не нашли маленький город
+                              }
                           });
 
 
                       }
-                  } else { // село
+                  } else { // ищем село
                       Area.find({'region':reg._id}).where('cities.name.last.ua').equals(city).exec(function (err, ar) {
                           if (err) console.log(err);
                           if (ar.length > 1) {   //нашли несколько сел
@@ -113,23 +83,30 @@ router.get('/', function (req, res) {
                           if (ar.length == 1){    //только одно село
                               findCourtById(ar[0]._id).then(function (result) {
                                  console.log('done'+result);
-                                 res.send(JSON.stringify({area:ar[0].name.last.ua, court:result}));
+                                 if (result) {
+                                     res.send(JSON.stringify({area:ar[0].name.last.ua, court:result}));
+                                 } else {
+                                     res.sendStatus(503);
+                                 }
+
                               });
+                          }
+                          if (ar.length ===0){ // не нашли село
+                              res.sendStatus(503);
                           }
                       });
                   }
               });
 
+            } else {
+                console.log('Область не найдена');
+                res.sendStatus(503);
             }
         });
-
-
-    } else {
-        //res.sendFile(path.join(__dirname, '../../public', 'find-area.html'));
     }
 
 
-    if (refinement && region && city) {
+    if (refinement && region && city) {  //пришло уточнение по району
         console.log('пришло уточнение');
         console.log(region + ' : ' + city + '  :  ' + refinement);
         Region.findOne({'name.last.ua': region}, function (err, reg) {
@@ -142,7 +119,12 @@ router.get('/', function (req, res) {
                            if (item.name.last.ua == refinement){
                                findCourtById(item._id).then(function (result) {
                                    console.log('done'+result);
-                                   res.send(JSON.stringify({area:item.name.last.ua, court:result}));
+                                   if (result) {
+                                       res.send(JSON.stringify({area:item.name.last.ua, court:result}));
+                                   } else {
+                                       res.sendStatus(503);
+                                   }
+
                                });
                            }
                         });
@@ -154,7 +136,12 @@ router.get('/', function (req, res) {
                             if (area){
                                 findCourtById(area._id).then(function (result) {
                                     console.log('done: '+result);
-                                    res.send(JSON.stringify({area:area.name.last.ua, court:result}));
+                                    if (result) {
+                                        res.send(JSON.stringify({area:area.name.last.ua, court:result}));
+                                    } else {
+                                        res.sendStatus(503);
+                                    }
+
                                 });
                             }
                         });
@@ -163,96 +150,7 @@ router.get('/', function (req, res) {
             }
         });
     }
-        // Area.find({'name.last.ua':refinement}).populate('region').exec(function (err, area) {
-        //     if (err) console.log(err);
-        //     console.log(area.length);
-        //     if (area){
-        //         area.forEach(function (elem) {
-        //             if (elem.region.name.last.ua === region) {
-        //                 findCourtById(elem._id).then(function (result) {
-        //                     console.log('done'+result);
-        //                     res.send(JSON.stringify({area:elem.name.last.ua, court:result}));
-        //                 });
-        //             }
-        //         });
-        //     }
-        //     if (area.length === 0) {
-        //         console.log('search....');
-        //         Area.findOne({'subarea.name.last.ua':refinement}).populate('region').exec(function (err, arr) {
-        //             if (err) console.log(err);
-        //             if (arr && arr.region.name.last.ua===region) {
-        //                 arr.subarea.forEach(function (item) {
-        //                     if (item.name.last.ua === refinement){
-        //                         console.log(item._id);
-        //                         findCourtById(item._id).then(function (result) {
-        //                             console.log('done: '+result);
-        //                             //res.send(JSON.stringify({area:elem.name.last.ua, court:result}));
-        //                         });
-        //                     }
-        //                 });
-        //
-        //             }
-        //         });
-        //     }
-        // });
-
-
-
-    // if (refinement && region && city) {
-    //     console.log('пришло уточнение');
-    //     console.log(region+' : '+city+'  :  '+refinement);
-    //     Area.find({'name.last.ua':refinement}).populate('region').exec(function (err, area) {
-    //        if (err) console.log(err);
-    //        console.log(area.length);
-    //        if (area){
-    //            area.forEach(function (elem) {
-    //               if (elem.region.name.last.ua === region) {
-    //                   findCourtById(elem._id).then(function (result) {
-    //                       console.log('done'+result);
-    //                       res.send(JSON.stringify({area:elem.name.last.ua, court:result}));
-    //                   });
-    //               }
-    //            });
-    //        }
-    //        if (area.length === 0) {
-    //            console.log('search....');
-    //            Area.findOne({'subarea.name.last.ua':refinement}).populate('region').exec(function (err, arr) {
-    //                if (err) console.log(err);
-    //                if (arr && arr.region.name.last.ua===region) {
-    //                    arr.subarea.forEach(function (item) {
-    //                       if (item.name.last.ua === refinement){
-    //                           console.log(item._id);
-    //                           findCourtById(item._id).then(function (result) {
-    //                               console.log('done: '+result);
-    //                               //res.send(JSON.stringify({area:elem.name.last.ua, court:result}));
-    //                           });
-    //                       }
-    //                    });
-    //
-    //                }
-    //            });
-    //        }
-    //     });
-    // }
-
 });
-
-router.get('/temp', function (req, res) {
-    res.end();
-    Area.findOne({'name.last.ua':'Одеса'}, function (err, area) {
-        console.log(area);
-        area.subarea.forEach(function (item) {
-            if (item.name.last.ua == 'Малиновський'){
-                item.streets.forEach(function (inner) {
-                    console.log(inner.name.last.ua);
-                });
-            }
-
-
-        });
-    }) ;
-});
-
 
 
 var findCourtById = async (function  (id) {
@@ -274,22 +172,5 @@ var findCourtById = async (function  (id) {
     }));
     return result;
 });
-
-
-
-
-var pushElement = function(el){
-  if (el == null) {
-      resultArray = [];
-  } else {
-      resultArray.push(el);
-  }
-};
-
-
-var addStreet = function (id, street) {
-
-};
-
 
 module.exports = router;

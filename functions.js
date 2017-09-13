@@ -241,7 +241,6 @@ var findRegionAndAddCity = function(region, city){
     });
 };
 
-
 var addSubareaWithStreets = function (region, area,subarea) {
     var areaInfo = {};
     //console.dir(subarea);
@@ -316,6 +315,48 @@ var addSubareaWithStreets = function (region, area,subarea) {
 
 };
 
+var saveStreetToSubarea = function (region, area, subarea, street) {
+    var promise = new Promise (function (resolve, reject) {
+        Region.findOne({'name.last.ua':region}, function (err, reg) {
+            if (err) console.log(err);
+            if (reg) {
+                resolve(reg);
+            }
+        }).then(function (reg) {
+           Area.findOne({'name.last.ua':area, region:reg._id}, function (err, ar) {
+              if (err) console.log(err);
+              if (ar) {
+                  ar.subarea.forEach(function (item) {
+                     if (item.name.last.ua === subarea) {
+                         if (checkIfStreetAlreadyExist(item.streets, street)){
+                             item.streets.push({
+                                 name:{
+                                     last:{
+                                         ua:street
+                                     }
+                                 }
+                             });
+                         }
+                     }
+                  });
+                  ar.save(function (err) {
+                     if (err) console.log(err);
+                  });
+              }
+           });
+        });
+    });
+};
+
+function checkIfStreetAlreadyExist(streets, street) {
+    for (var i=0; i<streets.length; i++){
+        if (streets[i].name.last.ua === street){
+            console.log('Already exist');
+            return false;
+        }
+    }
+    return true;
+}
 
 function remove(str, start, end) {
     var before = str.substring(0, start);
@@ -330,21 +371,6 @@ module.exports.singleAdd = singleAdd;
 module.exports.realAdd = realAdd;
 module.exports.postAndSave2 = postAndSave2;
 module.exports.findRegionAndAddCity = findRegionAndAddCity;
-module.exports.addSubareaWithStreets =addSubareaWithStreets;
+module.exports.addSubareaWithStreets = addSubareaWithStreets;
+module.exports.saveStreetToSubarea = saveStreetToSubarea;
 
-// var promise = new Promise(function (resolve, reject) {
-//     var ress = '';
-//     Area.findOne({'name.last.ua':areaName}, function (err, area) {
-//         console.log('resultT '+resultT);
-//         if (err) console.log(err);
-//         if (area) {
-//             console.log('area id: '+area._id);
-//             console.log('type of: '+ typeof area);
-//             ress = area._id;
-//         }
-//     });
-//     resolve(ress);
-// }).then(function (ress) {
-//     court.test={a:89};
-//     court.save();
-// });

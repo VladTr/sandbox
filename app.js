@@ -19,8 +19,18 @@ const createCourt = require('./routes/api/createCourt');
 
 const companyParser = require('./routes/company-parse');
 
+/*
+*
+* Testing
+*
+*/
+
+const crud = require('./routes/api/crud-test');
+app.route('/get-region').get(crud.getRegion);
+app.route('/count-regions').get(crud.regionsCount);
+
 app.set('views', path.join(__dirname, 'public'));
-//app.set('view engine', 'jade');
+
 
 app.use(express.static(__dirname + "/public"));
 
@@ -44,7 +54,8 @@ app.use('/api/create-court', createCourt);
 
 app.use('/company-parse', companyParser);
 
-app.listen(8080, function () {
-    console.log('Example app listening on port 8080!')
+app.listen(8090, function () {
+    console.log('Example app listening on port 8090!')
 });
 
+module.exports = app;// for testing
