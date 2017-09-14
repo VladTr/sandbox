@@ -12,27 +12,17 @@ router.get('/', function (req, res) {
     if (region && city && street){
         console.log(region+' : '+city+'  :  '+street);
     }
-    //var url = encodeURI('http://nominatim.openstreetmap.org/search/?city=Birmingham&country=Great Britain&street=Pilkington%20Avenue&format=xml');
-    //var url = encodeURI('http://nominatim.openstreetmap.org/search/?city=Київ&country=Україна&street=1, Перемоги площа&format=xml');
-    // var baseUrl = encodeURI('http://nominatim.openstreetmap.org/search/?city=Одесса&country=Україна&street=25 Чапаевской дивизии, 14&format=xml');
-    // var baseUrl = encodeURI('http://nominatim.openstreetmap.org/search/' +
-    //     '?city=Бар&country=Україна&street=Соборна, 2&state=Вінницька область&format=json&email=tvv.ossystem@gmail.com');
-
-
-    // region = 'Вінницька область';
-    // city = 'Бар';
-    // street = 'Соборна';
 
     var baseUrl = 'http://nominatim.openstreetmap.org/search/?format=json&email=tvv.ossystem@gmail.com';
-    var address = '&country=Україна&state='+region+'&city='+city+'&street='+street;
-
-    console.log(encodeURI(baseUrl+address));
-
+    var address = '&country=Україна&city='+city+'&street='+street/*+'&state='+region*/;
+    //console.log(encodeURI(baseUrl+address));
+    // var baseUrl ='http://nominatim.openstreetmap.org/search/ua/Київ/Хрещатик/1?format=json&polygon=1&addressdetails=1&email=tvv.ossystem@gmail.com';
+    // var address ='';
     request(encodeURI(baseUrl+address), function (err, response, body) {
         if (err) console.log(err);
+        console.log(body);
         if (body){
             try {
-                //res.send(body);
                 var area = '';
                 var temp = JSON.parse(body);
                 temp.every(function (item) {
@@ -44,7 +34,7 @@ router.get('/', function (req, res) {
                 throw new Error('json error');
             }
 
-            var regexp = /[\wаA-яёї]+ район/i;
+            var regexp = /[-\wаA-яґіёїє'"`’]+ район/i;
             if (area.match(regexp)){
                 console.log(area.match(regexp)[0]);
                 console.log(street);

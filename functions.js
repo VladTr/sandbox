@@ -327,7 +327,10 @@ var saveStreetToSubarea = function (region, area, subarea, street) {
               if (err) console.log(err);
               if (ar) {
                   ar.subarea.forEach(function (item) {
-                     if (item.name.last.ua === subarea) {
+                      if (subarea.indexOf('’')!==-1) {
+                          subarea = subarea.substring(0,subarea.indexOf('’'))+"'"+subarea.substring(subarea.indexOf('’')+1);
+                      }
+                      if (item.name.last.ua === subarea) {
                          if (checkIfStreetAlreadyExist(item.streets, street)){
                              item.streets.push({
                                  name:{
@@ -355,6 +358,7 @@ function checkIfStreetAlreadyExist(streets, street) {
             return false;
         }
     }
+    console.log('Not exist / added');
     return true;
 }
 

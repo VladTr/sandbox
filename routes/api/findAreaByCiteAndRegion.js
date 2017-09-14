@@ -74,7 +74,7 @@ router.get('/', function (req, res) {
                           if (err) console.log(err);
                           if (ar.length > 1) {   //нашли несколько сел
                               var result = [];
-                              pushElement(null);
+                              //pushElement(null);
                               ar.forEach(function (elem) {
                                   result.push(elem.name.last.ua);
                               });

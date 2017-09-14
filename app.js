@@ -21,14 +21,21 @@ const companyParser = require('./routes/company-parse');
 
 /*
 *
-* Testing
+* start testing block
 *
 */
-
 const crud = require('./routes/api/crud-test');
 app.route('/get-region').get(crud.getRegion);
 app.route('/count-regions').get(crud.regionsCount);
-
+app.route('/get-area').get(crud.getArea);
+app.route('/count-areas').get(crud.areasCount);
+app.route('/get-court').get(crud.getCourt);
+app.route('/count-courts').get(crud.courtsCount);
+app.route('/court-find').get(crud.courtFind);
+app.route('/count-streets').get(crud.countStreets);
+/*
+* end testing block
+ */
 app.set('views', path.join(__dirname, 'public'));
 
 
@@ -54,8 +61,8 @@ app.use('/api/create-court', createCourt);
 
 app.use('/company-parse', companyParser);
 
-app.listen(8090, function () {
-    console.log('Example app listening on port 8090!')
+app.listen(8080, function () {
+    console.log('Example app listening on port 8080!')
 });
 
 module.exports = app;// for testing
