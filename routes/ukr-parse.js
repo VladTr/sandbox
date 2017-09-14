@@ -13,9 +13,9 @@ var Area = require('../models/area-new');
 router.get('/', function (req, res) {
 
     /*Drop collection*/
-    Area.remove({}, function(err) {
-        console.log('collection removed')
-    });
+    // Area.remove({}, function(err) {
+    //     console.log('collection removed')
+    // });
 
     /*Great circle*/
     for (var index=0; index<currentRegion.length; index++){
@@ -33,6 +33,7 @@ router.get('/', function (req, res) {
             var flag = false; //маркер первого вхождения
             var obj =csvjson.toArray(data, options);
             //вспомогательный цикл
+            var len, add, tmp =[];
             for (var j=0; j<obj.length; j++){
                 var resultToRemove = obj[j].toString();
                 if (resultToRemove.indexOf('рада')!==-1){
@@ -47,6 +48,19 @@ router.get('/', function (req, res) {
                 if (resultToRemove.indexOf('громади')!==-1){
                     obj.splice(j,1);
                 }
+                if (resultToRemove.indexOf('район')!==-1){
+                    len = resultToRemove.split(' ').length;
+                    add = resultToRemove.split(' ')[len-1];
+                    add = add.substring(0, add.length-1);
+                    if (add!=='райо'){
+                        add = '99 c '+add;
+                        tmp.push(add);
+                        obj.splice(j+1, 0, tmp);
+                        tmp=[];
+
+                    }
+                }
+                console.log(obj);
             }
 
             for (var i=0; i<obj.length; i++){

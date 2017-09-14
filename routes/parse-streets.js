@@ -480,7 +480,7 @@ router.get('/kharkiv', function (req, res) {
     var subAreasName = [
         {name:'Шевченківський', streets:[]}, {name:'Новобаварський', streets:[]}, {name:'Київський', streets:[]},
         {name:'Слобідський', streets:[]}, {name:'Холодногірський', streets:[]}, {name:'Московський', streets:[]},
-        {name:'Індустріальний', streets:[]}, {name:'Немишлянський', streets:[]}, {name:"Основ’янський", streets:[]}];
+        {name:'Індустріальний', streets:[]}, {name:'Немишлянський', streets:[]}, {name:"Основ'янський", streets:[]}];
     var baseUrl = 'https://uk.wikipedia.org/wiki/Список_вулиць_Харкова_(';
 
     //Big circle
@@ -512,7 +512,7 @@ router.get('/kharkiv', function (req, res) {
                                 subarea = 'Слобідський';
                                 break;
                             case 'Червонозаводський':
-                                subarea = "Основ’янський";
+                                subarea = "Основ'янський";
                                 break;
                         }
                         console.log(street+' / '+subarea+'  old: '+oldStreet);
