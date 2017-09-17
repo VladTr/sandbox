@@ -154,23 +154,29 @@ router.get('/', function (req, res) {
 
 
 var findCourtById = async (function  (id) {
-    var result= await (Court.findOne({'area':id}, function (err, court) {
-        if (err) console.log(err);
-        if (court) {
-            console.log(court.name.last.ua);
-            result = court.name.last.ua;
-            console.log(court.replace);
-            if (court.replace !== '000000000000000000000000') {
-                Court.findOne({'_id':court.replace}, function (err, courtReplace) {
-                    if (err) console.log(err);
-                    if (courtReplace){
-                        console.log('replace is :' + courtReplace.name.last.ua);
-                    }
-                });
+    return new Promise (function (resolve, reject) {
+        Court.findOne({'area':id}, function (err, court) {
+            if (err) console.log(err);
+            if (court) {
+                console.log(court.name.last.ua);
+                //result = court.name.last.ua;
+                console.log(court.replace);
+                if (court.replace !== '000000000000000000000000') {
+                    Court.findOne({'_id':court.replace}, function (err, courtReplace) {
+                        if (err) console.log(err);
+                        if (courtReplace){
+                            console.log('replace is :' + courtReplace.name.last.ua);
+                            result = courtReplace;
+                            resolve(result);
+                        }
+                    });
+                } else {
+                    result = court.name.last.ua;
+                    resolve(court);
+                }
             }
-        }
-    }));
-    return result;
+        });
+    });
 });
 
 module.exports = router;

@@ -15,7 +15,7 @@ router.get('/', function (req, res) {
                         ua:'Поліський районний суд Київської області (скасований)'
                     }
                 },
-                area:mongoose.Types.ObjectId('59b29d8e49a8633efc1b8a47'),
+                area:mongoose.Types.ObjectId('59be6a4101e4a5007c6889ae'),
                 region:region._id,
                 replace:mongoose.Types.ObjectId('59b628b7cdb40d11420dc60f')
             });

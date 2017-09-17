@@ -19,6 +19,8 @@ const createCourt = require('./routes/api/createCourt');
 
 const companyParser = require('./routes/company-parse');
 
+const changeCourt = require('./routes/api/change-court');
+
 /*
 *
 * start testing block
@@ -33,9 +35,13 @@ app.route('/get-court').get(crud.getCourt);
 app.route('/count-courts').get(crud.courtsCount);
 app.route('/court-find').get(crud.courtFind);
 app.route('/count-streets').get(crud.countStreets);
+
 /*
 * end testing block
  */
+
+app.use('/change-court', changeCourt);
+
 app.set('views', path.join(__dirname, 'public'));
 
 
