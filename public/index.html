@@ -1,97 +1,139 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>test #2</title>
-    <style>
-        li{
-            list-style:none;
-        }
-        .bl{
-            color:blue;
-        }
-        #menu2{
-            background-color: burlywood;
-            width: 400px;
-        }
-        #add{
-            background-color: aliceblue;
-            font-size: 18px;
-            width: 450px;
-        }
-    </style>
+    <title>Определение подсудности</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 <body>
-    <div id="menu">
-        <ul>
-            <div id="add">
-                <li><a  class="bl" href="/add-regions ">добавляем регионы</a></li>
-                <li><a href="/parse-cities">добавляем города-районные центры</a></li>
-                <li><a href="/ukr-parse ">добавляем районы </a></li>
-                <li><a href="/parse-streets/donetsk"><strong>добавление улиц и районов [Донецк]</strong></a></li>
-                <li><a href="/parse-streets/kyiv"><strong>добавление улиц и районов [Киев]</strong></a></li>
-                <li><a href="/parse-streets/odessa"><strong>добавление улиц и районов [Одесса]</strong></a></li>
-                <li><a href="/parse-streets/lviv"><strong>добавление улиц и районов [Львов]</strong></a></li>
-                <li><a href="/parse-streets/mariupol"><strong>добавление улиц и районов [Мариуполь]</strong></a></li>
-                <li><a href="/parse-streets/zaporizhzhia"><strong>добавление улиц и районов [Запорожье]</strong></a></li>
-                <li><a href="/parse-streets/kropivnitsky"><strong>добавление улиц и районов [Кропивницкий]</strong></a></li>
-                <li><a href="/parse-streets/mycolaiv"><strong>добавление улиц и районов [Николаев]</strong></a></li>
-                <li><a href="/parse-streets/kharkiv"><strong>добавление улиц и районов [Харьков]</strong></a></li>
-                <li><a href="/parse-streets/all-other"><strong>добавление улиц и районов [Все остальные-без улиц]</strong></a></li>
-                <li><a href="/change-court">смена подсудности</a></li>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-7">
+                    <div class="page-header">
+                        <h1><small>для определения подсудности заполните форму</small></h1>
+                    </div>
+                    <form class="form-horizontal" id="myForm">
+                        <div class="form-group">
+                            <label for="region" class="control-label col-sm-3">область: </label>
+                            <div class="col-sm-9">
+                                <input type="text" id="region" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="city" class="control-label col-sm-3">село/город: </label>
+                            <div class="col-sm-9">
+                                <input type="text" id="city" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="street" class="control-label col-sm-3">улица: </label>
+                            <div class="col-sm-9">
+                                <input type="text" id="street" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="home" class="control-label col-sm-3">дом : </label>
+                            <div class="col-sm-9">
+                                <input type="text" id="home" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-3 col-sm-9">
+                                <button id="btn" class="btn btn-primary">найти район и суд</button>
+                                <button id="getOsm" class="btn btn-success">получение данных с помощью сервиса OSM</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="result" role="alert"></div>
+                </div>
+                <div class="col-md-5">
+                    <button id="menu-button" class="btn btn-primary">показать/скрыть парсинг меню</button>
+                    <div id="menu">
+                        <!--<div id="menu2">-->
+                        <!--<ul>-->
+                        <!--<li><a href="/api/find-subarea">поиск subarea</a></li>-->
+                        <!--<li><a href="/api/find-court-by/subarea">поиск суда по району города</a></li>-->
+                        <!--<li><a href="/api/area">поиск района по селу и области</a></li>-->
+                        <!--</ul>-->
+                        <!--</div>    -->
+                        <ul>
+                            <li><a  class="bl" href="/add-regions ">добавляем регионы</a></li>
+                            <li><a href="/parse-cities">добавляем города-районные центры</a></li>
+                            <li><a href="/ukr-parse ">добавляем районы </a></li>
+                            <li><a href="/parse-streets/donetsk"><strong>добавление улиц и районов [Донецк]</strong></a></li>
+                            <li><a href="/parse-streets/kyiv"><strong>добавление улиц и районов [Киев]</strong></a></li>
+                            <li><a href="/parse-streets/odessa"><strong>добавление улиц и районов [Одесса]</strong></a></li>
+                            <li><a href="/parse-streets/lviv"><strong>добавление улиц и районов [Львов]</strong></a></li>
+                            <li><a href="/parse-streets/mariupol"><strong>добавление улиц и районов [Мариуполь]</strong></a></li>
+                            <li><a href="/parse-streets/zaporizhzhia"><strong>добавление улиц и районов [Запорожье]</strong></a></li>
+                            <li><a href="/parse-streets/kropivnitsky"><strong>добавление улиц и районов [Кропивницкий]</strong></a></li>
+                            <li><a href="/parse-streets/mycolaiv"><strong>добавление улиц и районов [Николаев]</strong></a></li>
+                            <li><a href="/parse-streets/kharkiv"><strong>добавление улиц и районов [Харьков]</strong></a></li>
+                            <li><a href="/parse-streets/all-other"><strong>добавление улиц и районов [Все остальные-без улиц]</strong></a></li>
+                            <li><a href="/parse ">парсинг судов (4 этапа)</a></li>
+                            <!--<hr>-->
+                            <!--<li><a href="/modeltest/find ">ищем район</a></li>-->
+                            <!--<li><a href="/openmap">open map  - new</a></li>-->
+                            <!--<li><a href="/openmap/json">open map (json)</a></li>-->
+                            <!--<li><a href="/openmap/test">open map (структурный ввод)</a></li>-->
+                            <!--<li><a href="/openmap/query">open map (НЕ структурный ввод)</a></li>-->
+                            <!--<li><a href="/modeltest ">тестим модель</a></li>-->
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <hr>
-            <li><a href="/parse ">парсинг судов</a></li>
-            <li><a href="/modeltest/find ">ищем район</a></li>
-            <li><a href="/openmap">open map  - new</a></li>
-            <li><a href="/openmap/json">open map (json)</a></li>
-            <li><a href="/openmap/test">open map (структурный ввод)</a></li>
-            <li><a href="/openmap/query">open map (НЕ структурный ввод)</a></li>
-            <li><a href="/modeltest ">тестим модель</a></li>
-        </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="page-header">
+                    <h2><small>смена территориальной подсудности</small></h2>
+                    <form class="form-horizontal" id="myFormChange">
+                        <div class="form-group">
+                            <label for="oldCourt" class="control-label col-sm-3">действующая инстанция : </label>
+                            <div class="col-sm-9">
+                                <input type="text" id="oldCourt" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="newCourt" class="control-label col-sm-3">новая инстанция : </label>
+                            <div class="col-sm-9">
+                                <input type="text" id="newCourt" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-3 col-sm-9">
+                                <button id="btn2" class="btn btn-primary">сменить суд</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
     </div>
 
-    <div id="menu2">
-        <ul>
-            <li><a href="/api/find-subarea">поиск subarea</a></li>
-            <li><a href="/api/find-court-by/subarea">поиск суда по району города</a></li>
-            <li><a href="/api/area">поиск района по селу и области</a></li>
-        </ul>
-    </div>
-
-    <div>
-        <a href="/company-parse" style="background-color: darkblue; color: white; font-size: 20px">парсер компаний</a>
-    </div>
-    <hr>
-    <div id="enter">
-        <label for="region">область: </label>
-        <input type="text" id="region">
-        <br>
-        <label for="city">село/город: </label>
-        <input type="text" id="city">
-        <br>
-        <label for="street">улица: </label>
-        <input type="text" id="street">
-        <br>
-        <button id="btn">найти район</button>
-    </div>
-    <div id="result"></div>
-    <hr>
-    <button id="getOsm">получение данных с помощью сервиса OSM</button>
     <script>
         document.addEventListener("DOMContentLoaded", ready);
         function ready() {
+//            getRegions();
+            var oldCourt = document.getElementById('oldCourt');
+            var newCourt = document.getElementById('newCourt');
             var btn = document.getElementById('btn');
+            var btn2 = document.getElementById('btn2');
             var city = document.getElementById('city');
             var region = document.getElementById('region');
             var street = document.getElementById('street');
             var result = document.getElementById('result');
             var getOsm = document.getElementById('getOsm');
-            result.style.color = 'blue';
+            var menu = document.getElementById('menu');
+            var home = document.getElementById('home');
+            menu.style.display = 'none';
             btn.addEventListener('click', function () {
                 if (city.value !== '' &&  region.value !== '' && street.value !== ''){
                     var x = new XMLHttpRequest();
-                    var url = "/api/area?city="+String(city.value)+"&region="+String(region.value)+"&street="+String(street.value);
+                    var url = "/api/area?city="+String(city.value)+"&region="
+                        +String(region.value)+"&street="+String(street.value)+"&home="+String(home.value);
                     x.open("GET", url, true);
                     x.onload = function (){
                         if (x.status === 200 && x.readyState === 4) {
@@ -109,38 +151,50 @@
                                     option.innerHTML = areas[i];
                                     select.appendChild(option);
                                 }
-                                result.innerHTML='Несколько районов  ';
+                                result.innerHTML='Выберите район  ';
                                 result.appendChild(select);
                                 select.addEventListener("change", function (event) {
                                     refinementData(event.target.value);
                                 });
+                                result.className = '';
+                                select.className ='custom-select';
                             }
                             if (areas.area && areas.court) {
+                                result.className = 'alert alert-success';
                                 result.innerHTML = 'район:  ' + areas.area + "<br> суд: " + areas.court.name.last.ua;
                                 console.log(areas);
                             }
                         }
                         if (x.status === 503) {
+                            result.className = 'alert alert-danger';
                             result.innerHTML = 'район и суд получить не удалось';
                         }
                     };
                     x.send(null);
                 } else {
-                    result.innerHTML = 'enter the address, please';
+                    result.innerHTML = 'заполните все поля, пожалуйста';
+                    result.className = 'alert alert-warning';
                 }
             });
 
             getOsm.addEventListener('click',function () {
                 if (city.value !== '' &&  region.value !== '' && street.value !== ''){
-                    var url = "/openmap?city="+String(city.value)+"&region="+String(region.value)+"&street="+String(street.value);
+                    var url = "/openmap?city="+String(city.value)+"&region="
+                        +String(region.value)+"&street="+String(street.value)+"&home="+String(home.value);
                     var x = new XMLHttpRequest();
                     x.open("GET", url, true);
                     x.onload = function (){
                         if (x.status === 200 && x.readyState === 4){
-                            console.log(x.responseText);
-                            result.innerHTML = x.responseText;
+                            result.className = 'alert alert-success';
+                            try{
+                                var res = JSON.parse(x.responseText);
+                                result.innerHTML = res.address;
+                            } catch (e) {
+                                console.log(e.message);
+                            }
                         }
                         if (x.status === 503) {
+                            result.className = 'alert alert-danger';
                             result.innerHTML = 'получить район с помощью сервиса OSM не удалось';
                         }
                     };
@@ -156,6 +210,7 @@
                 x.onload = function () {
                     if (x.status === 200 && x.readyState === 4) {
                         var area = JSON.parse(x.responseText);
+                        result.className = 'alert alert-success';
                         result.innerHTML = 'район:  '+area.area+"<br> суд: "+area.court.name.last.ua;
                     }
                     if (x.status === 503) {
@@ -164,54 +219,104 @@
                 };
                 x.send(null);
             }
+
+            document.getElementById('menu-button').addEventListener('click', function (event) {
+                if (menu.style.display === 'none'){
+                    menu.style.display='block';
+                } else {
+                    menu.style.display = 'none';
+                }
+
+            });
+
+            document.getElementById('myForm').onsubmit = function () {
+              return false;
+            };
+            document.getElementById('myFormChange').onsubmit = function () {
+                return false;
+            };
+
+            btn2.addEventListener('click', function () {
+                if (oldCourt.value!=='' && newCourt.value!==''){
+                    console.log(oldCourt.value+'  '+newCourt.value);
+                    var url = "/api/change-court?old="+String(oldCourt.value)+"&new="+String(newCourt.value);
+                    console.log(url);
+                    var x = new XMLHttpRequest();
+                    x.open("GET", url, true);
+                    x.onload = function () {
+                        if (x.status === 200 && x.readyState === 4) {
+                            console.log(x.responseText);
+                        }
+                        if (x.status === 503) {
+                            result.innerHTML = 'район и суд получить не удалось';
+                        }
+                    };
+                    x.send(null);
+                }
+            });
+
+
+//            function getRegions() {
+//                var url = "/api/area/regions";
+//                var x = new XMLHttpRequest();
+//                x.open("GET", url, true);
+//                x.onload = function () {
+//                    if (x.status === 200 && x.readyState === 4){
+//                        var regions = JSON.parse(x.responseText);
+//
+//                        var selectRegionOne = document.createElement("select");
+//                        createSelect(regions, selectRegionOne);
+//                        areaOne.appendChild(selectRegionOne);
+//
+//                        var selectRegionTwo = document.createElement("select");
+//                        createSelect(regions, selectRegionTwo);
+//                        areaOne.appendChild(selectRegionTwo);
+//
+//                        selectRegionOne.addEventListener("change", function (event) {
+//                            sendChossenRegion(event.target.value);
+//                            this.disabled = true;
+//                        });
+//
+//                        selectRegionTwo.addEventListener("change", function (event) {
+//                            sendChossenRegion(event.target.value);
+//                            this.disabled = true;
+//                        });
+//                    }
+//                };
+//                x.send(null);
+//            }
+//
+//            function createSelect(list, selectDiv) {
+//                var optionBlock = document.createElement("option");
+//                optionBlock.setAttribute("value", '');
+//                selectDiv.appendChild(optionBlock);
+//                for (var i=0; i<list.length; i++){
+//                    optionBlock = document.createElement("option");
+//                    optionBlock.setAttribute("value", list[i]);
+//                    optionBlock.innerHTML = list[i];
+//                    selectDiv.appendChild(optionBlock);
+//                }
+//            }
+//
+//            function sendChossenRegion(region) {
+//                var url = "/api/area/regions/?region="+region;
+//                var x = new XMLHttpRequest();
+//                x.open("GET", url, true);
+//                x.onload = function () {
+//                    if (x.status === 200 && x.readyState === 4) {
+//                        var courts = JSON.parse(x.responseText);
+//                        var selectCourtOne = document.createElement("select");
+//                        createSelect(courts, selectCourtOne);
+//                        areaTwo.innerHTML = 'суд<br>';
+//                        areaTwo.appendChild(selectCourtOne);
+//                    }
+//                };
+//                x.send(null);
+//            }
+
         }
 
     </script>
-
-    <!--<script>-->
-        <!--var btn = document.getElementById('btn');-->
-        <!--var btn2 = document.getElementById('btn2');-->
-        <!--var area = document.getElementById('area');-->
-        <!--var region = document.getElementById('region');-->
-        <!--var result = document.getElementById('result');-->
-        <!--var address = document.getElementById('address');-->
-        <!--result.style.color = 'blue';-->
-        <!--btn.addEventListener('click', function () {-->
-            <!--if (area.value !== '' &&  region.value !== ''){-->
-                <!--var x = new XMLHttpRequest();-->
-                <!--var url = "/findcourt?area="+String(area.value)+"&region="+String(region.value);-->
-                <!--x.open("GET", url, true);-->
-                <!--x.onload = function (){-->
-                    <!--result.innerHTML = x.responseText;-->
-                <!--};-->
-                <!--x.send(null);-->
-                <!--console.log(inpt.value);-->
-            <!--} else {-->
-                <!--result.innerHTML = 'enter the address, please';-->
-            <!--}-->
-        <!--});-->
-        <!--btn2.addEventListener('click', function () {-->
-           <!--if (address.value !=='') {-->
-               <!--var x = new XMLHttpRequest();-->
-               <!--var url = "/openmap/query?address="+String(address.value);-->
-               <!--x.open("GET", url, true);-->
-               <!--x.onload = function (){-->
-                   <!--result.innerHTML = x.responseText;-->
-                   <!--console.log(x.responseText);-->
-               <!--};-->
-               <!--x.send(null);-->
-           <!--} else {-->
-               <!--result.innerHTML = 'enter the address, please';-->
-           <!--}-->
-        <!--});-->
-    <!--</script>-->
-
-    <!--<hr>-->
-    <!--Казацкое, Белгород-Днестровский район, Одесская область, 67733-->
-    <!--<hr>-->
-    <!--Одесса ул. Жуковского 23, 65045-->
-    <!--<hr>-->
-
 </body>
 
 </html>

@@ -23,6 +23,7 @@ var courtSchema = new mongoose.Schema({
     site:{type:String}
 });
 
+
 var Court = connection.model('Court', courtSchema);
 
 module.exports = Court;

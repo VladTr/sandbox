@@ -15,11 +15,9 @@ const parseStreets = require('./routes/parse-streets');
 const findSubarea = require('./routes/api/findSubarea');
 const findCourtBy = require('./routes/api/findCourtByAreaInCity');
 const findAreaBy = require('./routes/api/findAreaByCiteAndRegion');
-const createCourt = require('./routes/api/createCourt');
+const changeCourt = require('./routes/api/change-court');
 
 const companyParser = require('./routes/company-parse');
-
-const changeCourt = require('./routes/api/change-court');
 
 /*
 *
@@ -35,13 +33,10 @@ app.route('/get-court').get(crud.getCourt);
 app.route('/count-courts').get(crud.courtsCount);
 app.route('/court-find').get(crud.courtFind);
 app.route('/count-streets').get(crud.countStreets);
-
+app.route('/count-subareas').get(crud.countSubareas);
 /*
 * end testing block
  */
-
-app.use('/change-court', changeCourt);
-
 app.set('views', path.join(__dirname, 'public'));
 
 
@@ -63,7 +58,7 @@ app.use('/parse-streets', parseStreets);
 app.use('/api/find-subarea', findSubarea);
 app.use('/api/find-court-by/', findCourtBy);
 app.use('/api/area', findAreaBy);
-app.use('/api/create-court', createCourt);
+app.use('/api/change-court', changeCourt);
 
 app.use('/company-parse', companyParser);
 

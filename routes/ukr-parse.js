@@ -60,7 +60,7 @@ router.get('/', function (req, res) {
 
                     }
                 }
-                console.log(obj);
+                //console.log(obj);
             }
 
             for (var i=0; i<obj.length; i++){

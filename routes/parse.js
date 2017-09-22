@@ -4,6 +4,16 @@ const Court = require('../models/court-old');
 var areaCurrent = require('../data/5');
 var func = require('../functions');
 var court_type = 5;
+
+var Queue = require('simple-promise-queue');
+
+Queue.setPromise(require('bluebird'));
+
+var queue = new Queue({
+    autoStart: true, // autostart the queue
+    concurrency: 50
+});
+
 router.get('/', function (req, res) {
     res.send('parse');
 
@@ -19,27 +29,36 @@ router.get('/', function (req, res) {
     // totalData.forEach(function (item) {
     //     court_type = item.court_type;
     //     areaCurrent = item.areaCurrent;
+    var promiseArr = [];
+    for (var key in areaCurrent){
+        var area = areaCurrent[key].split('/')[0];
+        var region = areaCurrent[key].split('/')[1];
+        var code = key.slice(1);
+        var formData = {
+            reg_id:code,
+            court_type:court_type,
+            foo1: 1,
+            foo2: 73,
+            goto:''
+        };
+        var headers = {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:24.0) Gecko/20100101 Firefox/24.0',
+            'Content-Type' : 'application/x-www-form-urlencoded'
+        };
 
-        for (var key in areaCurrent){
-            var area = areaCurrent[key].split('/')[0];
-            var region = areaCurrent[key].split('/')[1];
-            var code = key.slice(1);
-            var formData = {
-                reg_id:code,
-                court_type:court_type,
-                foo1: 1,
-                foo2: 73,
-                goto:''
-            };
-            var headers = {
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:24.0) Gecko/20100101 Firefox/24.0',
-                'Content-Type' : 'application/x-www-form-urlencoded'
-            };
+        var promise = queue.pushTask(func.postAndSave2(formData,headers,region,area,court_type));
+        promiseArr.push(promise);
+    }
 
-            func.postAndSave2(formData,headers,region,area,court_type);
-        }
+    Promise.all(promiseArr)
+        .then(function() {
+                console.log('done all');
+            },
+            function (error) {
+                console.log(error.message);
+            }
+        );
     // });
-
 
 });
 

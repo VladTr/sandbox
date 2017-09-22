@@ -8,7 +8,7 @@ const should = chai.should();
 
 chai.use(chaiHttp);
 
-describe('Regions Areas Courts', function () {
+describe('--Regions Areas Courts--', function () {
 
     describe('get region', function () {
        var regForTesting = encodeURI('Вінницька');
@@ -53,14 +53,14 @@ describe('Regions Areas Courts', function () {
     });
 
     describe('number of areas', function () {
-        it('should get 561 pcs', function (done) {
+        it('should get 568 pcs', function (done) {
             chai.request(server)
                 .get('/count-areas')
                 .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('count');
-                    res.body.should.have.property('count').eql(561);
+                    res.body.should.have.property('count').eql(568);
                     done();
                 })
         });
@@ -82,14 +82,14 @@ describe('Regions Areas Courts', function () {
     });
 
     describe('number of courts', function () {
-        it('should get 606 pcs', function (done) {
+        it('should get 615 pcs', function (done) {
             chai.request(server)
                 .get('/count-courts')
                 .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('count');
-                    res.body.should.have.property('count').eql(606);
+                    res.body.should.have.property('count').eql(615);
                     done();
                 })
         });
@@ -223,13 +223,26 @@ describe('Regions Areas Courts', function () {
 
     describe('number of streets ', function () {
         var areaForTesting = encodeURI('Харків');
-        it('it should get Количество улиц Харків 2481', function (done) {
+        it('it should get Количество улиц Харків 2565', function (done) {
             chai.request(server)
                 .get('/count-streets?name='+areaForTesting)
                 .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
-                    res.body.should.have.property('count').eql(2481);
+                    res.body.should.have.property('count').eql(2565);
+                    done();
+                });
+        });
+    });
+
+    describe('number of sub areas ', function () {
+        it('it should get 101', function (done) {
+            chai.request(server)
+                .get('/count-subareas')
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('count').eql(101);
                     done();
                 });
         });

@@ -15,6 +15,9 @@ var regionSchema = new mongoose.Schema({
     name:nameSet
 });
 
+regionSchema.statics.getAllRegions = function getAllRegions(callback) {
+    return this.find({}).exec(callback);
+};
 
 
 var Region = connection.model('Region', regionSchema);

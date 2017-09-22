@@ -495,7 +495,6 @@ router.get('/kharkiv', function (req, res) {
                 var $ = cheerio.load(body);
                 var street, subarea, oldStreet = '';
                 var len = $('table.standard.sortable> tbody > tr').children().length;
-                console.log(len);
                 for (var i=6; i<len-7; i++){
                     if (i%6 ==0){
                         street = $('table.standard.sortable>tbody>tr').children().eq(i).text();
@@ -515,7 +514,7 @@ router.get('/kharkiv', function (req, res) {
                                 subarea = "Основ'янський";
                                 break;
                         }
-                        console.log(street+' / '+subarea+'  old: '+oldStreet);
+                        //console.log(street+' / '+subarea+'  old: '+oldStreet);
                         subAreasName.forEach(function (el) {
                             if (el.name === subarea.trim() || subarea.indexOf(el.name)!==-1){
                                 el.streets.push({
@@ -539,7 +538,7 @@ router.get('/kharkiv', function (req, res) {
             }
         });
     }
-    setTimeout(function(){ func.addSubareaWithStreets('Харківська', 'Харків', subAreasName); }, 4000);
+    setTimeout(function(){ func.addSubareaWithStreets('Харківська', 'Харків', subAreasName); }, 9000);
 
 
     res.end();

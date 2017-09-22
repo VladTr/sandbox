@@ -9,16 +9,13 @@
   "dependencies": {
     "asyncawait": "^1.0.6",
     "body-parser": "~1.17.1",
-    "cheerio": "^1.0.0-rc.2",
     "cookie-parser": "~1.4.3",
-    "csvjson": "^4.3.4",
     "debug": "~2.6.3",
     "express": "~4.15.2",
     "jade": "~1.11.0",
     "mongoose": "^4.11.9",
     "morgan": "~1.8.1",
-    "postman-request": "^2.81.1-postman.2",
-    "request": "^2.81.0",
+    "promise-queue": "^2.2.3",
     "serve-favicon": "~2.4.2",
     "simple-promise-queue": "^0.1.7",
     "xml2js": "^0.4.19"

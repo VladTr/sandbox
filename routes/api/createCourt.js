@@ -1,11 +1,9 @@
 var express = require('express');
-var router = express.Router();
 var Court = require('../../models/court-new');
 var Region = require('../../models/region-new');
 var mongoose = require('mongoose');
 
-router.get('/', function (req, res) {
-    res.send('create court');
+
     Region.findOne({'name.last.ua':'Київська'}, function (err, region) {
         if (err) console.log(err);
         if (region){
@@ -17,13 +15,11 @@ router.get('/', function (req, res) {
                 },
                 area:mongoose.Types.ObjectId('59be6a4101e4a5007c6889ae'),
                 region:region._id,
-                replace:mongoose.Types.ObjectId('59b628b7cdb40d11420dc60f')
+                replace:mongoose.Types.ObjectId('000000000000000000000000')
             });
             court.save(function (err) {
                 if (err) console.log(err);
             });
         }
     });
-});
 
-module.exports = router;

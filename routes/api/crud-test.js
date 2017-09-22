@@ -65,7 +65,21 @@ var crud = {
               res.json({count:count});
           }
        });
-  }
+  },
+
+    countSubareas: function (req, res) {
+        Area.find({}, function (err, areas) {
+            if (err) console.log(err);
+            var count =0;
+            areas.forEach(function (area) {
+                if (area.subarea.length > 0) {
+                    //console.log(area.name.last.ua+'number of subs: '+ area.subarea.length);
+                    count+=area.subarea.length;
+                }
+            });
+            res.json({count:count});
+        });
+    }
 
 };
 
